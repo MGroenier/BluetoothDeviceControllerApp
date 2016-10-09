@@ -11,12 +11,14 @@ import java.io.Serializable;
 public class Device implements Serializable {
 
     private long id;
+    private String displayName;
     private int image;
     private String deviceType;
     private BluetoothDevice mBluetoothDevice;
 
-    public Device(long id, int image, String deviceType, BluetoothDevice bluetoothDevice) {
+    public Device(long id, String displayName, int image, String deviceType, BluetoothDevice bluetoothDevice) {
         this.id = id;
+        this.displayName = displayName;
         this.image = image;
         this.deviceType = deviceType;
         mBluetoothDevice = bluetoothDevice;
@@ -37,6 +39,14 @@ public class Device implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public int getImage() {

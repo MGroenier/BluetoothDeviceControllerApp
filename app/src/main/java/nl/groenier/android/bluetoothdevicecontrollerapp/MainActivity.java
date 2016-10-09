@@ -102,13 +102,13 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     intentStartDeviceControl.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
-                    intentStartDeviceControl.putExtra("selectedDeviceName", selectedDevice.getBluetoothDevice().getName());
+                    intentStartDeviceControl.putExtra("selectedDeviceName", selectedDevice.getDisplayName());
                     startActivity(intentStartDeviceControl);
                 } else {
                     Toast.makeText(MainActivity.this, selectedDevice.getBluetoothDevice().getAddress() + " NOT present in database", Toast.LENGTH_SHORT).show();
                     Intent intentStartDeviceRegister = new Intent(MainActivity.this, DeviceRegisterActivity.class);
                     intentStartDeviceRegister.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
-                    intentStartDeviceRegister.putExtra("selectedDeviceName", selectedDevice.getBluetoothDevice().getName());
+                    intentStartDeviceRegister.putExtra("selectedDeviceDisplayName", selectedDevice.getDisplayName());
                     startActivity(intentStartDeviceRegister);
                 }
 

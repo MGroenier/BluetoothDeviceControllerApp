@@ -23,7 +23,7 @@ public class DeviceControlFlashingLightActivity extends AppCompatActivity {
     private Button buttonUnregisterDevice;
 
     private String deviceToControlMac;
-    private String deviceToControlName;
+    private String deviceToControlDisplayName;
 
     private DataSource datasource;
 
@@ -40,9 +40,9 @@ public class DeviceControlFlashingLightActivity extends AppCompatActivity {
         buttonUnregisterDevice = (Button) findViewById(R.id.button_device_control_flashing_light_unregister);
 
         deviceToControlMac = getIntent().getStringExtra("selectedDeviceMac");
-        deviceToControlName = getIntent().getStringExtra("selectedDeviceName");
+        deviceToControlDisplayName = getIntent().getStringExtra("selectedDeviceDisplayName");
 
-        getSupportActionBar().setTitle("Siren: " + deviceToControlName);
+        getSupportActionBar().setTitle("Siren: " + deviceToControlDisplayName);
 
         textViewMac.setText(deviceToControlMac);
 

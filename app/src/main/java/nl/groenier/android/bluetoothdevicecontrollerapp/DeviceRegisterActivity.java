@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ public class DeviceRegisterActivity extends AppCompatActivity {
     private Button buttonRegisterDevice;
     private TextView textViewName;
     private TextView textViewMac;
+    private EditText editTextDisplayName;
 
     private DataSource datasource;
 
@@ -40,6 +42,7 @@ public class DeviceRegisterActivity extends AppCompatActivity {
         buttonRegisterDevice = (Button) findViewById(R.id.button_register_device);
         textViewMac = (TextView) findViewById(R.id.text_view_device_register_mac);
         textViewName = (TextView) findViewById(R.id.text_view_device_register_name);
+        editTextDisplayName = (EditText) findViewById(R.id.edit_text_register_display_name);
 
         deviceToRegisterName = getIntent().getStringExtra("selectedDeviceName");
         deviceToRegisterMac = getIntent().getStringExtra("selectedDeviceMac");
@@ -62,7 +65,7 @@ public class DeviceRegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(DeviceRegisterActivity.this, "STUB, add device to database now", Toast.LENGTH_SHORT).show();
-                datasource.createDevice(deviceToRegisterMac,sItems.getSelectedItem().toString());
+                datasource.createDevice(editTextDisplayName.getText().toString(), deviceToRegisterMac,sItems.getSelectedItem().toString());
                 Toast.makeText(DeviceRegisterActivity.this, deviceToRegisterMac + " added to database", Toast.LENGTH_SHORT).show();
                 finish();
             }

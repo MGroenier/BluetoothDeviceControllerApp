@@ -49,7 +49,7 @@
     </TableLayout>
 
     <EditText
-        android:id="@+id/edit_text_register_displayed_name"
+        android:id="@+id/edit_text_register_display_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/table_layout_device_register"
@@ -61,7 +61,7 @@
         android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_text_register_displayed_name"
+        android:layout_below="@id/edit_text_register_display_name"
         android:layout_marginTop="25dp"/>
 
     <Button

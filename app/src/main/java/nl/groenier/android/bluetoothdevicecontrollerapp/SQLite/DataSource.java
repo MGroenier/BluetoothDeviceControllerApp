@@ -17,7 +17,7 @@ public class DataSource {
 
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
-    private String[] assignmentAllColumns = { MySQLiteHelper.COLUMN_DEVICE_ID, MySQLiteHelper.COLUMN_DEVICE_MAC, MySQLiteHelper.COLUMN_DEVICE_TYPE};
+    private String[] assignmentAllColumns = { MySQLiteHelper.COLUMN_DEVICE_ID, MySQLiteHelper.COLUMN_DEVICE_DISPLAY_NAME, MySQLiteHelper.COLUMN_DEVICE_MAC, MySQLiteHelper.COLUMN_DEVICE_TYPE};
 
     public DataSource(Context context) {
         dbHelper = new MySQLiteHelper(context);
@@ -37,12 +37,13 @@ public class DataSource {
 
     // ---------------------------------- TO BE MODIFIED!!! ----------------------------------------
 
-    public long createDevice(String mac, String type) {
+    public long createDevice(String displayName, String mac, String type) {
         // If the database is not open yet, open it
         if (!database.isOpen())
             open();
 
         ContentValues values = new ContentValues();
+        values.put(MySQLiteHelper.COLUMN_DEVICE_DISPLAY_NAME, displayName);
         values.put(MySQLiteHelper.COLUMN_DEVICE_MAC, mac);
         values.put(MySQLiteHelper.COLUMN_DEVICE_TYPE, type);
         long insertId = database.insert(MySQLiteHelper.TABLE_DEVICE, null, values);
