@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+                android:padding="16dp">
+
+    <TextView
+        android:id="@+id/text_view_intro_device_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="You have selected a device that has not been registered yet. Please register the device below."/>
+
+    <TableLayout
+        android:id="@+id/table_layout_device_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_intro_device_register"
+        android:layout_marginTop="15dp">
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Device name:"/>
+
+            <TextView
+                android:id="@+id/text_view_device_register_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MAC-address: "/>
+
+            <TextView
+                android:id="@+id/text_view_device_register_mac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </TableRow>
+
+    </TableLayout>
+
+    <EditText
+        android:id="@+id/edit_text_register_displayed_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/table_layout_device_register"
+        android:ems="10"
+        android:hint="displayed name"
+        android:inputType="text"/>
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_register_displayed_name"
+        android:layout_marginTop="25dp"/>
+
+    <Button
+        android:id="@+id/button_register_device"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_alignParentBottom="true"
+        android:text="Register device"/>
+
+</RelativeLayout>

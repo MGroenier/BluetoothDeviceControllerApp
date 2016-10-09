@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+                android:padding="16dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/wallplug"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Wallplug Control, here you'll be able to control the selected device."/>
+
+    <TextView
+        android:id="@+id/text_view_device_control_wallplug_mac"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/button_device_control_wallplug_turn_on"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:text="On"/>
+
+    <Button
+        android:id="@+id/button_device_control_wallplug_turn_off"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Off"/>
+
+    <Button
+        android:id="@+id/button_device_control_wallplug_unregister"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Unregister this device"/>
+
+</LinearLayout>
