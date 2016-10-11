@@ -11,7 +11,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="nl.groenier.android.beaconcontrollerapp.nl.groenier.android.bluetoothcontrollerapp.MainActivity"
+    tools:context="nl.groenier.android.bluetoothdevicecontrollerapp.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <TextView
@@ -37,24 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Re-discover devices"/>
-
-        <TextView
-            android:id="@+id/text_view_selected_device_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="[title not set]"/>
-
-        <TextView
-            android:id="@+id/text_view_selected_device_mac_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="[mac address not set]"/>
-
-        <TextView
-            android:id="@+id/text_view_selected_device_socket"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="[socket not set]"/>
 
     </LinearLayout>
 

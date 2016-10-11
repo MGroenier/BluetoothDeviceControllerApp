@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_ENABLE_BT = 0001;
 
-    private TextView connectedDeviceTitle;
-    private TextView connectedDeviceMacAddress;
-    private TextView connectedDeviceSocket;
+//    private TextView connectedDeviceTitle;
+//    private TextView connectedDeviceMacAddress;
+//    private TextView connectedDeviceSocket;
     private Button discoverDevices;
 
     private ListView deviceListView;
@@ -63,9 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
         datasource = new DataSource(this);
 
-        connectedDeviceTitle = (TextView) findViewById(R.id.text_view_selected_device_title);
-        connectedDeviceMacAddress = (TextView) findViewById(R.id.text_view_selected_device_mac_address);
-        connectedDeviceSocket = (TextView) findViewById(R.id.text_view_selected_device_socket);
+//        connectedDeviceTitle = (TextView) findViewById(R.id.text_view_selected_device_title);
+//        connectedDeviceMacAddress = (TextView) findViewById(R.id.text_view_selected_device_mac_address);
+//        connectedDeviceSocket = (TextView) findViewById(R.id.text_view_selected_device_socket);
         discoverDevices = (Button)  findViewById(R.id.button_discover_devices);
 
         deviceListView = (ListView) findViewById(R.id.list_view_devices);
@@ -102,19 +102,20 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     intentStartDeviceControl.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
-                    intentStartDeviceControl.putExtra("selectedDeviceName", selectedDevice.getDisplayName());
+                    intentStartDeviceControl.putExtra("selectedDeviceDisplayName", selectedDevice.getDisplayName());
+                    Toast.makeText(MainActivity.this, selectedDevice.getDisplayName(), Toast.LENGTH_SHORT).show();
                     startActivity(intentStartDeviceControl);
                 } else {
                     Toast.makeText(MainActivity.this, selectedDevice.getBluetoothDevice().getAddress() + " NOT present in database", Toast.LENGTH_SHORT).show();
                     Intent intentStartDeviceRegister = new Intent(MainActivity.this, DeviceRegisterActivity.class);
                     intentStartDeviceRegister.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
-                    intentStartDeviceRegister.putExtra("selectedDeviceDisplayName", selectedDevice.getDisplayName());
+                    intentStartDeviceRegister.putExtra("selectedDeviceName", selectedDevice.getBluetoothDevice().getName());
                     startActivity(intentStartDeviceRegister);
                 }
 
                 connectedBluetoothDevice = selectedDevice.getBluetoothDevice();
-                connectedDeviceTitle.setText(connectedBluetoothDevice.getName());
-                connectedDeviceMacAddress.setText(connectedBluetoothDevice.getAddress());
+//                connectedDeviceTitle.setText(connectedBluetoothDevice.getName());
+//                connectedDeviceMacAddress.setText(connectedBluetoothDevice.getAddress());
                 bluetoothSetupSocket(connectedBluetoothDevice);
                 bluetoothConnect();
             }
@@ -228,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) { }
         socket = tmp;
 
-        connectedDeviceSocket.setText(tmp.toString());
+//        connectedDeviceSocket.setText(tmp.toString());
         Toast.makeText(this, "Socket: " + tmp.toString(), Toast.LENGTH_SHORT).show();
     }
 
