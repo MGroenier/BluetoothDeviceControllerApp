@@ -32,11 +32,13 @@
         android:orientation="vertical"
         android:layout_alignParentBottom="true">
 
-        <Button
+        <ImageButton
             android:id="@+id/button_discover_devices"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Re-discover devices"/>
+            android:layout_gravity="center"
+            android:background="@drawable/button_bluetooth_discover"
+            android:src="@drawable/ic_bluetooth_searching_white_90dp"/>
 
     </LinearLayout>
 

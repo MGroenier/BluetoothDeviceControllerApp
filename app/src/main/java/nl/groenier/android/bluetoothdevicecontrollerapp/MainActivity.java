@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 //    private TextView connectedDeviceTitle;
 //    private TextView connectedDeviceMacAddress;
 //    private TextView connectedDeviceSocket;
-    private Button discoverDevices;
+    private ImageButton discoverDevices;
 
     private ListView deviceListView;
     private DeviceListAdapter mDeviceListAdapter;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 //        connectedDeviceTitle = (TextView) findViewById(R.id.text_view_selected_device_title);
 //        connectedDeviceMacAddress = (TextView) findViewById(R.id.text_view_selected_device_mac_address);
 //        connectedDeviceSocket = (TextView) findViewById(R.id.text_view_selected_device_socket);
-        discoverDevices = (Button)  findViewById(R.id.button_discover_devices);
+        discoverDevices = (ImageButton) findViewById(R.id.button_discover_devices);
 
         deviceListView = (ListView) findViewById(R.id.list_view_devices);
         listOfDevices = new ArrayList<Device>();
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Check whether device isn't already in the database, look for the MAC-address.
                 if(deviceFromDatabase != null) {
-                    Toast.makeText(MainActivity.this, selectedDevice.getBluetoothDevice().getAddress() + " present in database", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, selectedDevice.getBluetoothDevice().getAddress() + " present in database", Toast.LENGTH_SHORT).show();
                     Intent intentStartDeviceControl;
                     switch (deviceFromDatabase.getDeviceType()) {
                         case "rotating light":
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
                     intentStartDeviceControl.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
                     intentStartDeviceControl.putExtra("selectedDeviceDisplayName", selectedDevice.getDisplayName());
-                    Toast.makeText(MainActivity.this, selectedDevice.getDisplayName(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, selectedDevice.getDisplayName(), Toast.LENGTH_SHORT).show();
                     startActivity(intentStartDeviceControl);
                 } else {
                     Toast.makeText(MainActivity.this, selectedDevice.getBluetoothDevice().getAddress() + " NOT present in database", Toast.LENGTH_SHORT).show();
@@ -230,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
         socket = tmp;
 
 //        connectedDeviceSocket.setText(tmp.toString());
-        Toast.makeText(this, "Socket: " + tmp.toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Socket: " + tmp.toString(), Toast.LENGTH_SHORT).show();
     }
 
     public void bluetoothConnect() {
