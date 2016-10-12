@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private List listOfDevices;
 
     //private static final String DEVICE_ADDRESS = "20:16:07:22:68:86";
+//    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private BluetoothAdapter mBluetoothAdapter;
     //private BluetoothDevice selectedBluetoothDevice;
@@ -101,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
                     intentStartDeviceControl.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
                     intentStartDeviceControl.putExtra("selectedDeviceDisplayName", selectedDevice.getDisplayName());
+                    intentStartDeviceControl.putExtra("connectedBluetoothDevice", selectedDevice.getBluetoothDevice());
                     startActivity(intentStartDeviceControl);
                 } else {
                     Intent intentStartDeviceRegister = new Intent(MainActivity.this, DeviceRegisterActivity.class);
@@ -110,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 connectedBluetoothDevice = selectedDevice.getBluetoothDevice();
-                bluetoothSetupSocket(connectedBluetoothDevice);
-                bluetoothConnect();
+                //bluetoothSetupSocket(connectedBluetoothDevice);
+                //bluetoothConnect();
             }
         });
 
@@ -126,28 +129,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -182,22 +163,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void bluetoothDiscoverDevices() {
         mBluetoothAdapter.startDiscovery();
-        // Register the BroadcastReceiver
+        // Register the BroadcastReceiver for discovering a new device
         IntentFilter filterDeviceFound = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(mReceiverDeviceFound, filterDeviceFound);
+        // Register the BroadcastReceiver for when the discovering has finished
         IntentFilter filterDiscoveryFinished = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        registerReceiver(mReceiverDeviceFound, filterDeviceFound); // Don't forget to unregister during onDestroy
-        registerReceiver(mReceiverDiscoveryFinished, filterDiscoveryFinished); // Don't forget to unregister during onDestroy
-//        Toast.makeText(this, "Scanning for available bluetooth devices.", Toast.LENGTH_SHORT).show();
+        registerReceiver(mReceiverDiscoveryFinished, filterDiscoveryFinished);
     }
 
-    // Create a BroadcastReceiver for ACTION_FOUND
+    // Create a BroadcastReceiver for ACTION_DISCOVERY_FINISHED
     private final BroadcastReceiver mReceiverDiscoveryFinished = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            // When discovery finds a device
+            // When discovery ends
             if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 //Stop the animation of the discoverDevices Button
-                //discoverDevices.clearAnimation();
                 scanPulseShape.clearAnimation();
             }
         }
@@ -211,6 +191,12 @@ public class MainActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                Parcelable[] uuidExtra = intent.getParcelableArrayExtra(BluetoothDevice.EXTRA_UUID);
+                if(uuidExtra == null) {
+                    Log.d("uuid", "uuidExtra is null");
+                } else {
+                    Log.d("uuid", "uuidExtra is not null");
+                }
                 // Add the name and address to an array adapter to show in a ListView
                 listOfDevices.add(new Device(R.drawable.ic_bluetooth_black_45dp,device));
                 mDeviceListAdapter.notifyDataSetChanged();
@@ -230,9 +216,6 @@ public class MainActivity extends AppCompatActivity {
             tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
         } catch (IOException e) { }
         socket = tmp;
-
-//        connectedDeviceSocket.setText(tmp.toString());
-//        Toast.makeText(this, "Socket: " + tmp.toString(), Toast.LENGTH_SHORT).show();
     }
 
     public void bluetoothConnect() {
