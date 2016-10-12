@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import nl.groenier.android.beaconcontrollerapp.R;
+import nl.groenier.android.bluetoothdevicecontrollerapp.R;
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
 
 /**

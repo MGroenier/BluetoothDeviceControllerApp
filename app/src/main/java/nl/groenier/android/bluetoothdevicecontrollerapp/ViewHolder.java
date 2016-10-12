@@ -4,8 +4,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import nl.groenier.android.beaconcontrollerapp.R;
-
 /**
  * Created by Martijn on 08/10/2016.
  */

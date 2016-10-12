@@ -14,7 +14,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.groenier.android.beaconcontrollerapp.R;
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
 
 /**

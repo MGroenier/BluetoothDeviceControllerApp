@@ -15,10 +15,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -28,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import nl.groenier.android.beaconcontrollerapp.R;
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
 
 public class MainActivity extends AppCompatActivity {
