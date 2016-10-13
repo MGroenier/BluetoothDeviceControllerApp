@@ -130,6 +130,8 @@ public class DataSource {
 
             device.setId(cursor.getLong(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_ID)));
 
+            device.setDisplayName(cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_DISPLAY_NAME)));
+
             device.setDeviceType(cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_TYPE)));
 
             device.setIcon(cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_ICON)));
