@@ -18,13 +18,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="17sp"
-        android:text="Use the button to start scanning for nearby devices."/>
+        android:textColor="#999"
+        android:text="Available devices:"/>
 
     <ListView
         android:id="@+id/list_view_devices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"></ListView>
+        android:layout_marginTop="35dp"></ListView>
 
     <!--<LinearLayout-->
         <!--android:layout_width="match_parent"-->
