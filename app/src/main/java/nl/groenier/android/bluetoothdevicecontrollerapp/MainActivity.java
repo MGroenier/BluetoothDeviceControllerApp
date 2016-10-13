@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     intentStartDeviceControl.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
-                    Toast.makeText(MainActivity.this, selectedDevice.getDisplayName(), Toast.LENGTH_SHORT).show();
                     intentStartDeviceControl.putExtra("selectedDeviceDisplayName", deviceFromDatabase.getDisplayName());
                     intentStartDeviceControl.putExtra("connectedBluetoothDevice", selectedDevice.getBluetoothDevice());
                     startActivity(intentStartDeviceControl);
