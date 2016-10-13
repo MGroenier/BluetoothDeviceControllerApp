@@ -22,7 +22,7 @@ public class ViewHolder {
 
     public void populateRow(Device item) {
         //Set the icon for this row
-        image.setImageResource(item.getImage());
+        image.setImageResource(item.getIcon());
         //Set the title for this row
         if(item.getBluetoothDevice().getName() != "") {
             title.setText(item.getBluetoothDevice().getName());

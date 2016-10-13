@@ -24,7 +24,6 @@ import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
 
 public class DeviceControlFlashingLightActivity extends AppCompatActivity {
 
-    private TextView textViewMac;
     private Button buttonTurnOn;
     private Button buttonTurnOff;
     private Button buttonUnregisterDevice;
@@ -45,7 +44,6 @@ public class DeviceControlFlashingLightActivity extends AppCompatActivity {
 
         datasource = new DataSource(this);
 
-        textViewMac = (TextView) findViewById(R.id.text_view_device_control_mac);
         buttonTurnOn = (Button) findViewById(R.id.button_device_control_flashing_light_turn_on);
         buttonTurnOff = (Button) findViewById(R.id.button_device_control_flashing_light_turn_off);
         buttonUnregisterDevice = (Button) findViewById(R.id.button_device_control_flashing_light_unregister);
@@ -59,7 +57,6 @@ public class DeviceControlFlashingLightActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Siren: " + deviceToControlDisplayName);
 
-        textViewMac.setText(deviceToControlMac);
 
         buttonTurnOn.setOnClickListener(new View.OnClickListener() {
             @Override

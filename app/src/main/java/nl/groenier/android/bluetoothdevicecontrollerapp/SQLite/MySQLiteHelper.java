@@ -12,13 +12,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     // Database info
     private static final String DATABASE_NAME = "bluetooth_application.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 9;
     // Courses
     public static final String TABLE_DEVICE = "device";
     public static final String COLUMN_DEVICE_ID = "device_id";
     public static final String COLUMN_DEVICE_DISPLAY_NAME = "device_display_name";
     public static final String COLUMN_DEVICE_MAC = "device_mac";
     public static final String COLUMN_DEVICE_TYPE = "device_type";
+    public static final String COLUMN_DEVICE_ICON = "device_icon";
 
     // Creating the table
     private static final String DATABASE_CREATE_SERIES =
@@ -27,7 +28,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                     COLUMN_DEVICE_ID + " integer primary key autoincrement, " +
                     COLUMN_DEVICE_DISPLAY_NAME + " text not null," +
                     COLUMN_DEVICE_MAC + " text not null," +
-                    COLUMN_DEVICE_TYPE + " text not null" +
+                    COLUMN_DEVICE_TYPE + " text not null," +
+                    COLUMN_DEVICE_ICON + " int" +
                     ");";
 
     public MySQLiteHelper(Context context) {

@@ -13,8 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -24,7 +22,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -197,8 +194,21 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.d("uuid", "uuidExtra is not null");
                 }
+
+                Device deviceRetrievedFromDatabase = datasource.getDevice(device.getAddress());
+                //Toast.makeText(context, deviceRetrievedFromDatabase.toString(), Toast.LENGTH_SHORT).show();
+                int iconForDevice;
+
+                if(deviceRetrievedFromDatabase != null) {
+                    iconForDevice = deviceRetrievedFromDatabase.getIcon();
+                    Log.d("FATAL", String.valueOf(iconForDevice));
+                } else {
+                    iconForDevice = R.drawable.ic_unknown_device_white_45dp;
+                }
+
                 // Add the name and address to an array adapter to show in a ListView
-                listOfDevices.add(new Device(R.drawable.ic_bluetooth_black_45dp,device));
+                listOfDevices.add(new Device(iconForDevice,device));
+
                 mDeviceListAdapter.notifyDataSetChanged();
             }
         }

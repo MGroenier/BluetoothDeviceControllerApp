@@ -17,7 +17,6 @@ import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
 
 public class DeviceControlWallplugActivity extends AppCompatActivity {
 
-    private TextView textViewMac;
     private Button buttonTurnOn;
     private Button buttonTurnOff;
     private Button buttonUnregisterDevice;
@@ -34,7 +33,6 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
 
         datasource = new DataSource(this);
 
-        textViewMac = (TextView) findViewById(R.id.text_view_device_control_wallplug_mac);
         buttonTurnOn = (Button) findViewById(R.id.button_device_control_wallplug_turn_on);
         buttonTurnOff = (Button) findViewById(R.id.button_device_control_wallplug_turn_off);
         buttonUnregisterDevice = (Button) findViewById(R.id.button_device_control_wallplug_unregister);
@@ -43,8 +41,6 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
         deviceToControlName = getIntent().getStringExtra("selectedDeviceName");
 
         getSupportActionBar().setTitle("Wallplug: " + deviceToControlName);
-
-        textViewMac.setText(deviceToControlMac);
 
         buttonTurnOn.setOnClickListener(new View.OnClickListener() {
             @Override
