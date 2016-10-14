@@ -41,15 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private DeviceListAdapter mDeviceListAdapter;
     private List listOfDevices;
 
-    //private static final String DEVICE_ADDRESS = "20:16:07:22:68:86";
-//    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private BluetoothAdapter mBluetoothAdapter;
     //private BluetoothDevice selectedBluetoothDevice;
     private BluetoothDevice connectedBluetoothDevice;
     private BluetoothSocket socket;
     private OutputStream outputStream;
-    //private InputStream inputStream;
 
     private DataSource datasource;
 
@@ -120,10 +117,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 listOfDevices.clear();
                 mDeviceListAdapter.notifyDataSetChanged();
-                scanPulseShape.startAnimation(scanPulseAnimation);
                 bluetoothSetup();
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        listOfDevices.clear();
+        mDeviceListAdapter.notifyDataSetChanged();
+        bluetoothSetup();
 
     }
 
@@ -164,9 +170,24 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filterDeviceFound = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(mReceiverDeviceFound, filterDeviceFound);
         // Register the BroadcastReceiver for when the discovering has finished
+        IntentFilter filterDiscoveryStarted = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        registerReceiver(mReceiverDiscoveryStarted, filterDiscoveryStarted);
+        // Register the BroadcastReceiver for when the discovering has finished
         IntentFilter filterDiscoveryFinished = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(mReceiverDiscoveryFinished, filterDiscoveryFinished);
     }
+
+    // Create a BroadcastReceiver for ACTION_DISCOVERY_FINISHED
+    private final BroadcastReceiver mReceiverDiscoveryStarted = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            // When discovery starts
+            if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+                //Stop the animation of the discoverDevices Button
+                scanPulseShape.startAnimation(scanPulseAnimation);
+            }
+        }
+    };
 
     // Create a BroadcastReceiver for ACTION_DISCOVERY_FINISHED
     private final BroadcastReceiver mReceiverDiscoveryFinished = new BroadcastReceiver() {
@@ -196,18 +217,19 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Device deviceRetrievedFromDatabase = datasource.getDevice(device.getAddress());
-                //Toast.makeText(context, deviceRetrievedFromDatabase.toString(), Toast.LENGTH_SHORT).show();
                 int iconForDevice;
 
+                // If not null, then the device is present in the database
                 if(deviceRetrievedFromDatabase != null) {
                     iconForDevice = deviceRetrievedFromDatabase.getIcon();
-                    Log.d("FATAL", String.valueOf(iconForDevice));
+                    listOfDevices.add(new Device(iconForDevice,deviceRetrievedFromDatabase.getDisplayName(),device));
                 } else {
                     iconForDevice = R.drawable.ic_unknown_device_white_45dp;
+                    listOfDevices.add(new Device(iconForDevice,device.getName(),device));
                 }
 
                 // Add the name and address to an array adapter to show in a ListView
-                listOfDevices.add(new Device(iconForDevice,device));
+
 
                 mDeviceListAdapter.notifyDataSetChanged();
             }
