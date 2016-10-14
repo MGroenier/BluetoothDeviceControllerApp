@@ -1,4 +1,4 @@
-package nl.groenier.android.beaconcontrollerapp;
+package nl.groenier.android.bluetoothdevicecontrollerapp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -8,49 +8,45 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import nl.groenier.android.beaconcontrollerapp.R;
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_ENABLE_BT = 0001;
 
-//    private TextView connectedDeviceTitle;
-//    private TextView connectedDeviceMacAddress;
-//    private TextView connectedDeviceSocket;
-    private Button discoverDevices;
+    private ImageButton discoverDevices;
+    private ImageView scanPulseShape;
+    private Animation scanPulseAnimation;
 
     private ListView deviceListView;
     private DeviceListAdapter mDeviceListAdapter;
     private List listOfDevices;
 
-    private static final String DEVICE_ADDRESS = "20:16:07:22:68:86";
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothDevice selectedBluetoothDevice;
+    //private BluetoothDevice selectedBluetoothDevice;
     private BluetoothDevice connectedBluetoothDevice;
     private BluetoothSocket socket;
     private OutputStream outputStream;
-    private InputStream inputStream;
 
     private DataSource datasource;
 
@@ -63,10 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
         datasource = new DataSource(this);
 
-//        connectedDeviceTitle = (TextView) findViewById(R.id.text_view_selected_device_title);
-//        connectedDeviceMacAddress = (TextView) findViewById(R.id.text_view_selected_device_mac_address);
-//        connectedDeviceSocket = (TextView) findViewById(R.id.text_view_selected_device_socket);
-        discoverDevices = (Button)  findViewById(R.id.button_discover_devices);
+        discoverDevices = (ImageButton) findViewById(R.id.button_discover_devices);
+        scanPulseShape = (ImageView) findViewById(R.id.image_view_scan_shape);
+        scanPulseAnimation = AnimationUtils.loadAnimation(this, R.anim.scan);
 
         deviceListView = (ListView) findViewById(R.id.list_view_devices);
         listOfDevices = new ArrayList<Device>();
@@ -87,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
 
                 // Check whether device isn't already in the database, look for the MAC-address.
                 if(deviceFromDatabase != null) {
-                    Toast.makeText(MainActivity.this, selectedDevice.getBluetoothDevice().getAddress() + " present in database", Toast.LENGTH_SHORT).show();
                     Intent intentStartDeviceControl;
                     switch (deviceFromDatabase.getDeviceType()) {
                         case "rotating light":
@@ -102,11 +96,10 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     intentStartDeviceControl.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
-                    intentStartDeviceControl.putExtra("selectedDeviceDisplayName", selectedDevice.getDisplayName());
-                    Toast.makeText(MainActivity.this, selectedDevice.getDisplayName(), Toast.LENGTH_SHORT).show();
+                    intentStartDeviceControl.putExtra("selectedDeviceDisplayName", deviceFromDatabase.getDisplayName());
+                    intentStartDeviceControl.putExtra("connectedBluetoothDevice", selectedDevice.getBluetoothDevice());
                     startActivity(intentStartDeviceControl);
                 } else {
-                    Toast.makeText(MainActivity.this, selectedDevice.getBluetoothDevice().getAddress() + " NOT present in database", Toast.LENGTH_SHORT).show();
                     Intent intentStartDeviceRegister = new Intent(MainActivity.this, DeviceRegisterActivity.class);
                     intentStartDeviceRegister.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
                     intentStartDeviceRegister.putExtra("selectedDeviceName", selectedDevice.getBluetoothDevice().getName());
@@ -114,10 +107,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 connectedBluetoothDevice = selectedDevice.getBluetoothDevice();
-//                connectedDeviceTitle.setText(connectedBluetoothDevice.getName());
-//                connectedDeviceMacAddress.setText(connectedBluetoothDevice.getAddress());
-                bluetoothSetupSocket(connectedBluetoothDevice);
-                bluetoothConnect();
+                //bluetoothSetupSocket(connectedBluetoothDevice);
+                //bluetoothConnect();
             }
         });
 
@@ -130,36 +121,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    protected void onResume() {
+        super.onResume();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        listOfDevices.clear();
+        mDeviceListAdapter.notifyDataSetChanged();
+        bluetoothSetup();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -195,22 +166,71 @@ public class MainActivity extends AppCompatActivity {
 
     public void bluetoothDiscoverDevices() {
         mBluetoothAdapter.startDiscovery();
-        // Register the BroadcastReceiver
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
-        Toast.makeText(this, "Scanning for available bluetooth devices.", Toast.LENGTH_SHORT).show();
+        // Register the BroadcastReceiver for discovering a new device
+        IntentFilter filterDeviceFound = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(mReceiverDeviceFound, filterDeviceFound);
+        // Register the BroadcastReceiver for when the discovering has finished
+        IntentFilter filterDiscoveryStarted = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        registerReceiver(mReceiverDiscoveryStarted, filterDiscoveryStarted);
+        // Register the BroadcastReceiver for when the discovering has finished
+        IntentFilter filterDiscoveryFinished = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        registerReceiver(mReceiverDiscoveryFinished, filterDiscoveryFinished);
     }
 
+    // Create a BroadcastReceiver for ACTION_DISCOVERY_FINISHED
+    private final BroadcastReceiver mReceiverDiscoveryStarted = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            // When discovery starts
+            if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+                //Stop the animation of the discoverDevices Button
+                scanPulseShape.startAnimation(scanPulseAnimation);
+            }
+        }
+    };
+
+    // Create a BroadcastReceiver for ACTION_DISCOVERY_FINISHED
+    private final BroadcastReceiver mReceiverDiscoveryFinished = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            // When discovery ends
+            if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                //Stop the animation of the discoverDevices Button
+                scanPulseShape.clearAnimation();
+            }
+        }
+    };
+
     // Create a BroadcastReceiver for ACTION_FOUND
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiverDeviceFound = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                Parcelable[] uuidExtra = intent.getParcelableArrayExtra(BluetoothDevice.EXTRA_UUID);
+                if(uuidExtra == null) {
+                    Log.d("uuid", "uuidExtra is null");
+                } else {
+                    Log.d("uuid", "uuidExtra is not null");
+                }
+
+                Device deviceRetrievedFromDatabase = datasource.getDevice(device.getAddress());
+                int iconForDevice;
+
+                // If not null, then the device is present in the database
+                if(deviceRetrievedFromDatabase != null) {
+                    iconForDevice = deviceRetrievedFromDatabase.getIcon();
+                    listOfDevices.add(new Device(iconForDevice,deviceRetrievedFromDatabase.getDisplayName(),device));
+                } else {
+                    iconForDevice = R.drawable.ic_unknown_device_white_45dp;
+                    listOfDevices.add(new Device(iconForDevice,device.getName(),device));
+                }
+
                 // Add the name and address to an array adapter to show in a ListView
-                listOfDevices.add(new Device(R.drawable.ic_bluetooth_black_45dp,device));
+
+
                 mDeviceListAdapter.notifyDataSetChanged();
             }
         }
@@ -228,9 +248,6 @@ public class MainActivity extends AppCompatActivity {
             tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
         } catch (IOException e) { }
         socket = tmp;
-
-//        connectedDeviceSocket.setText(tmp.toString());
-        Toast.makeText(this, "Socket: " + tmp.toString(), Toast.LENGTH_SHORT).show();
     }
 
     public void bluetoothConnect() {
@@ -283,6 +300,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mReceiver);
+        unregisterReceiver(mReceiverDeviceFound);
+        unregisterReceiver(mReceiverDiscoveryFinished);
     }
 }

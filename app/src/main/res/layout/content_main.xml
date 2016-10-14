@@ -18,7 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="17sp"
-        android:text="Please select one of the devices below:"/>
+        android:textColor="#999"
+        android:text="Available devices:"/>
 
     <ListView
         android:id="@+id/list_view_devices"
@@ -26,18 +27,35 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"></ListView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_alignParentBottom="true">-->
 
-        <Button
+        <!--<ImageButton-->
+            <!--android:id="@+id/button_discover_devices"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:background="@drawable/button_bluetooth_discover"-->
+            <!--android:src="@drawable/ic_bluetooth_searching_white_90dp"/>-->
+
+    <!--</LinearLayout>-->
+
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="150dp" android:layout_alignParentBottom="true">
+
+        <ImageView android:id="@+id/image_view_scan_shape" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_centerHorizontal="true" android:src="@drawable/bluetooth_discover_scan" android:layout_gravity="bottom|right"/>
+
+        <ImageButton
             android:id="@+id/button_discover_devices"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Re-discover devices"/>
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/button_bluetooth_discover"
+            android:src="@drawable/ic_bluetooth_searching_white_90dp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

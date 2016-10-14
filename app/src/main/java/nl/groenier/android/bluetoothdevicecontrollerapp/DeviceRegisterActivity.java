@@ -3,6 +3,7 @@ package nl.groenier.android.bluetoothdevicecontrollerapp;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,7 +15,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.groenier.android.beaconcontrollerapp.R;
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
 
 /**
@@ -64,12 +64,28 @@ public class DeviceRegisterActivity extends AppCompatActivity {
         buttonRegisterDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(DeviceRegisterActivity.this, "STUB, add device to database now", Toast.LENGTH_SHORT).show();
-                datasource.createDevice(editTextDisplayName.getText().toString(), deviceToRegisterMac,sItems.getSelectedItem().toString());
+                String selectedItem = sItems.getSelectedItem().toString();
+                datasource.createDevice(editTextDisplayName.getText().toString(), deviceToRegisterMac,selectedItem, getIconResource(selectedItem));
                 Toast.makeText(DeviceRegisterActivity.this, deviceToRegisterMac + " added to database", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
 
     }
+
+    private int getIconResource(String selectedDeviceType) {
+        int iconResource = 0;
+
+        switch (selectedDeviceType) {
+            case "rotating light":
+                iconResource = R.drawable.siren_icon_white;
+                break;
+            case "wallplug":
+                iconResource = R.drawable.wallplug_white;
+                break;
+        }
+
+        return iconResource;
+    }
+
 }
