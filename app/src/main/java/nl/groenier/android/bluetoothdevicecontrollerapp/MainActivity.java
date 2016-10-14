@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
             // When discovery starts
             if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+                discoverDevices.setEnabled(false);
                 //Stop the animation of the discoverDevices Button
                 scanPulseShape.startAnimation(scanPulseAnimation);
             }
@@ -195,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
             // When discovery ends
             if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                discoverDevices.setEnabled(true);
                 //Stop the animation of the discoverDevices Button
                 scanPulseShape.clearAnimation();
             }
