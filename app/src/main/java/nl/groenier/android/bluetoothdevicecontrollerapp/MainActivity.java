@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(mReceiverDiscoveryFinished, filterDiscoveryFinished);
     }
 
-    // Create a BroadcastReceiver for ACTION_DISCOVERY_FINISHED
+    // Create a BroadcastReceiver for ACTION_DISCOVERY_STARTED
     private final BroadcastReceiver mReceiverDiscoveryStarted = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();

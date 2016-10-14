@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +24,7 @@ import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
 
 public class DeviceRegisterActivity extends AppCompatActivity {
 
-    private Button buttonRegisterDevice;
+    private ImageButton buttonRegisterDevice;
     private TextView textViewName;
     private TextView textViewMac;
     private EditText editTextDisplayName;
@@ -37,25 +38,21 @@ public class DeviceRegisterActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_register);
+        getSupportActionBar().setTitle("Register this device");
         datasource = new DataSource(this);
 
-        buttonRegisterDevice = (Button) findViewById(R.id.button_register_device);
-        textViewMac = (TextView) findViewById(R.id.text_view_device_register_mac);
-        textViewName = (TextView) findViewById(R.id.text_view_device_register_name);
+        buttonRegisterDevice = (ImageButton) findViewById(R.id.button_register_device);
         editTextDisplayName = (EditText) findViewById(R.id.edit_text_register_display_name);
 
         deviceToRegisterName = getIntent().getStringExtra("selectedDeviceName");
         deviceToRegisterMac = getIntent().getStringExtra("selectedDeviceMac");
-
-        textViewName.setText(deviceToRegisterName);
-        textViewMac.setText(deviceToRegisterMac);
 
         List<String> spinnerArray =  new ArrayList<String>();
         spinnerArray.add("rotating light");
         spinnerArray.add("wallplug");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, spinnerArray);
+                this, R.layout.spinner_item, spinnerArray);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final Spinner sItems = (Spinner) findViewById(R.id.spinner);

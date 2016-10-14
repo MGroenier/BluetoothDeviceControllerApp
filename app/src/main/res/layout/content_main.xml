@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/button_bluetooth_discover"
+            android:background="@drawable/bluetooth_discover_button"
             android:src="@drawable/ic_bluetooth_searching_white_90dp"/>
 
     </RelativeLayout>
