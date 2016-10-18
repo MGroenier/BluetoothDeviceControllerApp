@@ -54,13 +54,13 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
         bluetoothSetupSocket(connectedBluetoothDevice);
         bluetoothConnect();
 
-        getSupportActionBar().setTitle("Siren: " + deviceToControlDisplayName);
+        getSupportActionBar().setTitle("Wall plug: " + deviceToControlDisplayName);
 
 
         buttonTurnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                write("1".getBytes());
+                write("0".getBytes());
                 Toast.makeText(DeviceControlWallplugActivity.this, "STUB, Turn on!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -68,7 +68,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
         buttonTurnOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                write("0".getBytes());
+                write("1".getBytes());
                 Toast.makeText(DeviceControlWallplugActivity.this, "STUB, Turn off!", Toast.LENGTH_SHORT).show();
             }
         });
