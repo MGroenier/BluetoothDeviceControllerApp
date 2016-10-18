@@ -34,7 +34,7 @@ public class DeviceListAdapter extends ArrayAdapter<Device> {
         if (row == null) {
 
             //Inflate the layout if it didn't exist yet
-            row = inflater.inflate(R.layout.devices_list_item, parent, false);
+            row = inflater.inflate(R.layout.devices_list_item_cardview, parent, false);
             //Create a new view holder instance
             holder = new ViewHolder(row);
             //set the holder as a tag so we can get it back later

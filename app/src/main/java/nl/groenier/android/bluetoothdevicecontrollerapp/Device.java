@@ -24,9 +24,10 @@ public class Device implements Serializable {
         mBluetoothDevice = bluetoothDevice;
     }
 
-    public Device(int icon, String displayName, BluetoothDevice bluetoothDevice) {
+    public Device(int icon, String displayName, String deviceType, BluetoothDevice bluetoothDevice) {
         this.icon = icon;
         this.displayName = displayName;
+        this.deviceType = deviceType;
         mBluetoothDevice = bluetoothDevice;
     }
 

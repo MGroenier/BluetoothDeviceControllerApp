@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter deviceAdapter;
     private RecyclerView.LayoutManager deviceLayoutManager;
 
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        context = this;
         datasource = new DataSource(this);
 
         discoverDevices = (ImageButton) findViewById(R.id.button_discover_devices);
@@ -238,20 +240,23 @@ public class MainActivity extends AppCompatActivity {
 
                 Device deviceRetrievedFromDatabase = datasource.getDevice(device.getAddress());
                 int iconForDevice;
+                String deviceType;
 
                 // If not null, then the device is present in the database
                 if(deviceRetrievedFromDatabase != null) {
                     iconForDevice = deviceRetrievedFromDatabase.getIcon();
-                    listOfDevices.add(new Device(iconForDevice,deviceRetrievedFromDatabase.getDisplayName(),device));
+                    deviceType = deviceRetrievedFromDatabase.getDeviceType();
+                    listOfDevices.add(new Device(iconForDevice,deviceRetrievedFromDatabase.getDisplayName(), deviceType, device));
                 } else {
                     iconForDevice = R.drawable.ic_unknown_device_white_45dp;
-                    listOfDevices.add(new Device(iconForDevice,device.getName(),device));
+                    deviceType = device.getName();
+                    listOfDevices.add(new Device(iconForDevice,device.getName(), deviceType, device));
                 }
 
                 // Add the name and address to an array adapter to show in a ListView
 
 
-                deviceAdapter = new DeviceAdapter(listOfDevices, getParent());
+                deviceAdapter = new DeviceAdapter(listOfDevices, context);
                 deviceRecyclerView.setAdapter(deviceAdapter);
 
 //                mDeviceListAdapter.notifyDataSetChanged();

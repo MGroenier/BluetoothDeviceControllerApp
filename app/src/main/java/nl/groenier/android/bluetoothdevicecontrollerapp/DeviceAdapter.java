@@ -1,12 +1,15 @@
 package nl.groenier.android.bluetoothdevicecontrollerapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -46,7 +49,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.devices_list_item, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.devices_list_item_cardview, parent, false);
         return new ViewHolder(itemView);
     }
 
@@ -73,7 +76,34 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-            // To be determined.
+
+            Device selectedDevice = getItem(getAdapterPosition());
+
+            if(selectedDevice.getDisplayName() != null) {
+                Intent intentStartDeviceControl;
+                switch (selectedDevice.getDeviceType()) {
+                    case "rotating light":
+                        intentStartDeviceControl = new Intent(context, DeviceControlFlashingLightActivity.class);
+                        break;
+                    case "wallplug":
+                        intentStartDeviceControl = new Intent(context, DeviceControlWallplugActivity.class);
+                        break;
+                    default:
+                        intentStartDeviceControl = new Intent(context, DeviceControlFlashingLightActivity.class);
+                        break;
+                }
+                intentStartDeviceControl.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
+                intentStartDeviceControl.putExtra("selectedDeviceDisplayName", selectedDevice.getDisplayName());
+                intentStartDeviceControl.putExtra("connectedBluetoothDevice", selectedDevice.getBluetoothDevice());
+                context.startActivity(intentStartDeviceControl);
+
+            } else {
+                Intent intentStartDeviceRegister = new Intent(context, DeviceRegisterActivity.class);
+                intentStartDeviceRegister.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
+                intentStartDeviceRegister.putExtra("selectedDeviceName", selectedDevice.getBluetoothDevice().getName());
+                context.startActivity(intentStartDeviceRegister);
+            }
+
         }
 
         public void populateRow(Device device) {
