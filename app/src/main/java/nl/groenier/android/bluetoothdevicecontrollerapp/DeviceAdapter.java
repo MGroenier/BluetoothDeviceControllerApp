@@ -79,7 +79,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
 
             Device selectedDevice = getItem(getAdapterPosition());
 
-            if(selectedDevice.getDisplayName() != null) {
+            if(selectedDevice.getDeviceType() != "unknownDeviceType") {
                 Intent intentStartDeviceControl;
                 switch (selectedDevice.getDeviceType()) {
                     case "rotating light":
