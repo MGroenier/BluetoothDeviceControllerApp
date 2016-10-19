@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +20,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -37,18 +38,22 @@ public class MainActivity extends AppCompatActivity {
     private ImageView scanPulseShape;
     private Animation scanPulseAnimation;
 
-    private ListView deviceListView;
-    private DeviceListAdapter mDeviceListAdapter;
     private List listOfDevices;
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private BluetoothAdapter mBluetoothAdapter;
-    //private BluetoothDevice selectedBluetoothDevice;
+
     private BluetoothDevice connectedBluetoothDevice;
     private BluetoothSocket socket;
     private OutputStream outputStream;
 
     private DataSource datasource;
+
+    private RecyclerView deviceRecyclerView;
+    private RecyclerView.Adapter deviceAdapter;
+    private RecyclerView.LayoutManager deviceLayoutManager;
+
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,66 +62,32 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        context = this;
         datasource = new DataSource(this);
 
         discoverDevices = (ImageButton) findViewById(R.id.button_discover_devices);
         scanPulseShape = (ImageView) findViewById(R.id.image_view_scan_shape);
         scanPulseAnimation = AnimationUtils.loadAnimation(this, R.anim.scan);
 
-        deviceListView = (ListView) findViewById(R.id.list_view_devices);
         listOfDevices = new ArrayList<Device>();
 
-        mDeviceListAdapter = new DeviceListAdapter(this,R.layout.devices_list_item,listOfDevices);
-        deviceListView.setAdapter(mDeviceListAdapter);
+        // Retrieve a reference to the RecyclerView
+        deviceRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_devices);
 
-        mDeviceListAdapter.notifyDataSetChanged();
+        // Use LinearLayoutManager
+        deviceLayoutManager = new LinearLayoutManager(this);
+        deviceRecyclerView.setLayoutManager(deviceLayoutManager);
+
+        // Specyfing an adapter
+        deviceAdapter = new DeviceAdapter(listOfDevices, this);
+        deviceRecyclerView.setAdapter(deviceAdapter);
 
         bluetoothSetup();
-
-        deviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Device selectedDevice = (Device) listOfDevices.get(position);
-
-                Device deviceFromDatabase = datasource.getDevice(selectedDevice.getBluetoothDevice().getAddress());
-
-                // Check whether device isn't already in the database, look for the MAC-address.
-                if(deviceFromDatabase != null) {
-                    Intent intentStartDeviceControl;
-                    switch (deviceFromDatabase.getDeviceType()) {
-                        case "rotating light":
-                            intentStartDeviceControl = new Intent(MainActivity.this, DeviceControlFlashingLightActivity.class);
-                            break;
-                        case "wallplug":
-                            intentStartDeviceControl = new Intent(MainActivity.this, DeviceControlWallplugActivity.class);
-                            break;
-                        default:
-                            intentStartDeviceControl = new Intent(MainActivity.this, DeviceControlFlashingLightActivity.class);
-                            break;
-                    }
-
-                    intentStartDeviceControl.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
-                    intentStartDeviceControl.putExtra("selectedDeviceDisplayName", deviceFromDatabase.getDisplayName());
-                    intentStartDeviceControl.putExtra("connectedBluetoothDevice", selectedDevice.getBluetoothDevice());
-                    startActivity(intentStartDeviceControl);
-                } else {
-                    Intent intentStartDeviceRegister = new Intent(MainActivity.this, DeviceRegisterActivity.class);
-                    intentStartDeviceRegister.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
-                    intentStartDeviceRegister.putExtra("selectedDeviceName", selectedDevice.getBluetoothDevice().getName());
-                    startActivity(intentStartDeviceRegister);
-                }
-
-                connectedBluetoothDevice = selectedDevice.getBluetoothDevice();
-                //bluetoothSetupSocket(connectedBluetoothDevice);
-                //bluetoothConnect();
-            }
-        });
 
         discoverDevices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listOfDevices.clear();
-                mDeviceListAdapter.notifyDataSetChanged();
                 bluetoothSetup();
             }
         });
@@ -128,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         listOfDevices.clear();
-        mDeviceListAdapter.notifyDataSetChanged();
         bluetoothSetup();
 
     }
@@ -220,20 +190,26 @@ public class MainActivity extends AppCompatActivity {
 
                 Device deviceRetrievedFromDatabase = datasource.getDevice(device.getAddress());
                 int iconForDevice;
+                String deviceType;
 
                 // If not null, then the device is present in the database
                 if(deviceRetrievedFromDatabase != null) {
                     iconForDevice = deviceRetrievedFromDatabase.getIcon();
-                    listOfDevices.add(new Device(iconForDevice,deviceRetrievedFromDatabase.getDisplayName(),device));
+                    deviceType = deviceRetrievedFromDatabase.getDeviceType();
+                    listOfDevices.add(new Device(iconForDevice,deviceRetrievedFromDatabase.getDisplayName(), deviceType, device));
                 } else {
                     iconForDevice = R.drawable.ic_unknown_device_white_45dp;
-                    listOfDevices.add(new Device(iconForDevice,device.getName(),device));
+                    deviceType = "unknownDeviceType";
+                    listOfDevices.add(new Device(iconForDevice,device.getName(), deviceType, device));
                 }
 
                 // Add the name and address to an array adapter to show in a ListView
 
 
-                mDeviceListAdapter.notifyDataSetChanged();
+                deviceAdapter = new DeviceAdapter(listOfDevices, context);
+                deviceRecyclerView.setAdapter(deviceAdapter);
+
+//                mDeviceListAdapter.notifyDataSetChanged();
             }
         }
     };

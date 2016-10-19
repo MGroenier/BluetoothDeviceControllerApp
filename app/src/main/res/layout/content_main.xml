@@ -15,17 +15,19 @@
     tools:showIn="@layout/activity_main">
 
     <TextView
+        android:id="@+id/text_view_intro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="17sp"
         android:textColor="#999"
         android:text="Available devices:"/>
 
-    <ListView
-        android:id="@+id/list_view_devices"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_devices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"></ListView>
+        android:layout_below="@id/text_view_intro"
+        android:layout_marginTop="16dp"></android.support.v7.widget.RecyclerView>
 
     <!--<LinearLayout-->
         <!--android:layout_width="match_parent"-->
