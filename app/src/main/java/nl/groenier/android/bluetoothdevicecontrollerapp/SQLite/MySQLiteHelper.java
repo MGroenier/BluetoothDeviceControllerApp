@@ -20,7 +20,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DEVICE_DISPLAY_NAME = "device_display_name";
     public static final String COLUMN_DEVICE_MAC = "device_mac";
     public static final String COLUMN_DEVICE_TYPE = "device_type";
-    public static final String COLUMN_DEVICE_ICON = "device_icon";
 
     // deviceType table
     public static final String TABLE_DEVICE_TYPE = "deviceType";
@@ -36,7 +35,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                     COLUMN_DEVICE_DISPLAY_NAME + " text not null," +
                     COLUMN_DEVICE_MAC + " text not null," +
                     COLUMN_DEVICE_TYPE + " text not null," +
-                    COLUMN_DEVICE_ICON + " int" +
+                    COLUMN_DEVICE_TYPE_ICON + " int" +
                     ");";
 
     // Creating the deviceType table
