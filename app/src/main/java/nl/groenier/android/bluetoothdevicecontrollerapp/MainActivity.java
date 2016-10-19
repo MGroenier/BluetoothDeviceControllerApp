@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 listOfDevices.clear();
                 bluetoothSetup();
+                bluetoothDiscoverDevices();
             }
         });
 
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
         listOfDevices.clear();
         bluetoothSetup();
-
+        bluetoothDiscoverDevices();
     }
 
     @Override
@@ -127,24 +128,21 @@ public class MainActivity extends AppCompatActivity {
             Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BT);
         }
-
-        if (mBluetoothAdapter != null) {
-            bluetoothDiscoverDevices();
-        }
-
     }
 
     public void bluetoothDiscoverDevices() {
-        mBluetoothAdapter.startDiscovery();
-        // Register the BroadcastReceiver for discovering a new device
-        IntentFilter filterDeviceFound = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(mReceiverDeviceFound, filterDeviceFound);
-        // Register the BroadcastReceiver for when the discovering has finished
-        IntentFilter filterDiscoveryStarted = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        registerReceiver(mReceiverDiscoveryStarted, filterDiscoveryStarted);
-        // Register the BroadcastReceiver for when the discovering has finished
-        IntentFilter filterDiscoveryFinished = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        registerReceiver(mReceiverDiscoveryFinished, filterDiscoveryFinished);
+        if (mBluetoothAdapter != null) {
+            mBluetoothAdapter.startDiscovery();
+            // Register the BroadcastReceiver for discovering a new device
+            IntentFilter filterDeviceFound = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            registerReceiver(mReceiverDeviceFound, filterDeviceFound);
+            // Register the BroadcastReceiver for when the discovering has finished
+            IntentFilter filterDiscoveryStarted = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+            registerReceiver(mReceiverDiscoveryStarted, filterDiscoveryStarted);
+            // Register the BroadcastReceiver for when the discovering has finished
+            IntentFilter filterDiscoveryFinished = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+            registerReceiver(mReceiverDiscoveryFinished, filterDiscoveryFinished);
+        }
     }
 
     // Create a BroadcastReceiver for ACTION_DISCOVERY_STARTED
@@ -154,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
             // When discovery starts
             if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
                 discoverDevices.setEnabled(false);
-                //Stop the animation of the discoverDevices Button
+                // Stop the animation of the discoverDevices Button
                 scanPulseShape.startAnimation(scanPulseAnimation);
             }
         }
@@ -203,77 +201,11 @@ public class MainActivity extends AppCompatActivity {
                     listOfDevices.add(new Device(iconForDevice,device.getName(), deviceType, device));
                 }
 
-                // Add the name and address to an array adapter to show in a ListView
-
-
                 deviceAdapter = new DeviceAdapter(listOfDevices, context);
                 deviceRecyclerView.setAdapter(deviceAdapter);
-
-//                mDeviceListAdapter.notifyDataSetChanged();
             }
         }
     };
-
-    public void bluetoothSetupSocket(BluetoothDevice device) {
-        // Use a temporary object that is later assigned to mmSocket,
-        // because mmSocket is final
-        BluetoothSocket tmp = null;
-        connectedBluetoothDevice = device;
-
-        // Get a BluetoothSocket to connect with the given BluetoothDevice
-        try {
-            // MY_UUID is the app's UUID string, also used by the server code
-            tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
-        } catch (IOException e) { }
-        socket = tmp;
-    }
-
-    public void bluetoothConnect() {
-        // The discovery can be cancelled now, we found our device
-        mBluetoothAdapter.cancelDiscovery();
-
-        try {
-            socket.connect();
-        }
-        catch (IOException connectException) {
-            // Not able to connect, close the socket and get out
-            Toast.makeText(this, "Failed to connect to the socket!", Toast.LENGTH_SHORT).show();
-            try {
-                socket.close();
-            } catch (IOException closeException) { }
-            return;
-        }
-
-        Toast.makeText(this, "Successfully connected to the socket!", Toast.LENGTH_SHORT).show();
-        bluetoothSendData();
-        //manageConnectedSocket(socket);
-
-    }
-
-    /** Will cancel an in-progress connection, and close the socket */
-    public void cancel() {
-        try {
-            socket.close();
-        } catch (IOException e) { }
-    }
-
-    public void bluetoothSendData() {
-        try {
-            outputStream = socket.getOutputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Failed to get OutputStream.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void write(byte[] bytes) {
-        try {
-            outputStream.write(bytes);
-            Log.d("Write Bytes", "write: " + bytes.toString());
-        } catch (IOException e) {
-            Toast.makeText(this, "Failed to write!", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     @Override
     protected void onDestroy() {
