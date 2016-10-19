@@ -40,12 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List listOfDevices;
 
-    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private BluetoothAdapter mBluetoothAdapter;
-
-    private BluetoothDevice connectedBluetoothDevice;
-    private BluetoothSocket socket;
-    private OutputStream outputStream;
 
     private DataSource datasource;
 
