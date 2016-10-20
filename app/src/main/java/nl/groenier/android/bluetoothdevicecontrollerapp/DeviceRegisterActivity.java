@@ -48,8 +48,8 @@ public class DeviceRegisterActivity extends AppCompatActivity {
         deviceToRegisterMac = getIntent().getStringExtra("selectedDeviceMac");
 
         List<String> spinnerArray =  new ArrayList<String>();
-        spinnerArray.add("rotating light");
-        spinnerArray.add("wallplug");
+        spinnerArray.add("Wall plug");
+        spinnerArray.add("Siren");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, R.layout.spinner_item, spinnerArray);
@@ -61,8 +61,9 @@ public class DeviceRegisterActivity extends AppCompatActivity {
         buttonRegisterDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String selectedItem = sItems.getSelectedItem().toString();
-                datasource.createDevice(editTextDisplayName.getText().toString(), deviceToRegisterMac,selectedItem, getIconResource(selectedItem));
+                String spinnersSelectedDeviceType = sItems.getSelectedItem().toString();
+                DeviceType selectedDeviceType = datasource.getDeviceType(spinnersSelectedDeviceType);
+                datasource.createDevice(editTextDisplayName.getText().toString(), deviceToRegisterMac, selectedDeviceType.getId());
                 Toast.makeText(DeviceRegisterActivity.this, deviceToRegisterMac + " added to database", Toast.LENGTH_SHORT).show();
                 finish();
             }

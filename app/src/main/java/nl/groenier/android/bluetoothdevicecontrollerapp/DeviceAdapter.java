@@ -78,14 +78,15 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
         public void onClick(View view) {
 
             Device selectedDevice = getItem(getAdapterPosition());
+            String deviceType = selectedDevice.getDeviceType().getName();
 
-            if(selectedDevice.getDeviceType() != "unknownDeviceType") {
+            if(!deviceType.equals("Unknown")) {
                 Intent intentStartDeviceControl;
-                switch (selectedDevice.getDeviceType()) {
-                    case "rotating light":
+                switch (deviceType) {
+                    case "Siren":
                         intentStartDeviceControl = new Intent(context, DeviceControlFlashingLightActivity.class);
                         break;
-                    case "wallplug":
+                    case "Wall plug":
                         intentStartDeviceControl = new Intent(context, DeviceControlWallplugActivity.class);
                         break;
                     default:
@@ -98,6 +99,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
                 context.startActivity(intentStartDeviceControl);
 
             } else {
+                Log.d("fatal", "else: " + deviceType);
                 Intent intentStartDeviceRegister = new Intent(context, DeviceRegisterActivity.class);
                 intentStartDeviceRegister.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
                 intentStartDeviceRegister.putExtra("selectedDeviceName", selectedDevice.getBluetoothDevice().getName());
@@ -109,7 +111,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
         public void populateRow(Device device) {
             deviceDisplayName.setText(device.getDisplayName());
             deviceMacAddress.setText(device.getBluetoothDevice().getAddress());
-            deviceIcon.setImageResource(device.getIcon());
+            deviceIcon.setImageResource(device.getDeviceType().getIcon());
         }
     }
 }

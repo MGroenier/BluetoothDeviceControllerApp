@@ -12,20 +12,17 @@ public class Device implements Serializable {
 
     private long id;
     private String displayName;
-    private int icon;
-    private String deviceType;
+    private DeviceType deviceType;
     private BluetoothDevice mBluetoothDevice;
 
-    public Device(long id, String displayName, int icon, String deviceType, BluetoothDevice bluetoothDevice) {
+    public Device(long id, String displayName, DeviceType deviceType, BluetoothDevice bluetoothDevice) {
         this.id = id;
         this.displayName = displayName;
-        this.icon = icon;
         this.deviceType = deviceType;
         mBluetoothDevice = bluetoothDevice;
     }
 
-    public Device(int icon, String displayName, String deviceType, BluetoothDevice bluetoothDevice) {
-        this.icon = icon;
+    public Device(String displayName, DeviceType deviceType, BluetoothDevice bluetoothDevice) {
         this.displayName = displayName;
         this.deviceType = deviceType;
         mBluetoothDevice = bluetoothDevice;
@@ -51,19 +48,11 @@ public class Device implements Serializable {
         this.displayName = displayName;
     }
 
-    public int getIcon() {
-        return icon;
-    }
-
-    public void setIcon(int icon) {
-        this.icon = icon;
-    }
-
-    public String getDeviceType() {
+    public DeviceType getDeviceType() {
         return deviceType;
     }
 
-    public void setDeviceType(String deviceType) {
+    public void setDeviceType(DeviceType deviceType) {
         this.deviceType = deviceType;
     }
 

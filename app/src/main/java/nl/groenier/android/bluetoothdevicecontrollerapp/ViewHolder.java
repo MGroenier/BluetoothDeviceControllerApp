@@ -22,7 +22,7 @@ public class ViewHolder {
 
     public void populateRow(Device item) {
         //Set the icon for this row
-        image.setImageResource(item.getIcon());
+        image.setImageResource(item.getDeviceType().getIcon());
         //Set the title for this row
         if(item.getDisplayName() != "") {
             displayName.setText(item.getDisplayName());
