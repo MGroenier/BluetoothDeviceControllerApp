@@ -8,6 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import nl.groenier.android.bluetoothdevicecontrollerapp.Device;
+import nl.groenier.android.bluetoothdevicecontrollerapp.DeviceType;
 
 /**
  * Created by Martijn on 29/09/2016.
@@ -17,7 +18,7 @@ public class DataSource {
 
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
-    private String[] assignmentAllColumns = { MySQLiteHelper.COLUMN_DEVICE_ID, MySQLiteHelper.COLUMN_DEVICE_DISPLAY_NAME, MySQLiteHelper.COLUMN_DEVICE_MAC, MySQLiteHelper.COLUMN_DEVICE_TYPE, MySQLiteHelper.COLUMN_DEVICE_ICON};
+    private String[] assignmentAllColumns = { MySQLiteHelper.COLUMN_DEVICE_ID, MySQLiteHelper.COLUMN_DEVICE_DISPLAY_NAME, MySQLiteHelper.COLUMN_DEVICE_MAC, MySQLiteHelper.COLUMN_DEVICE_TYPE_ID, MySQLiteHelper.COLUMN_DEVICE_TYPE_NAME, MySQLiteHelper.COLUMN_DEVICE_TYPE_ICON};
 
     public DataSource(Context context) {
         dbHelper = new MySQLiteHelper(context);
@@ -36,8 +37,8 @@ public class DataSource {
     }
 
     // ---------------------------------- TO BE MODIFIED!!! ----------------------------------------
-
-    public long createDevice(String displayName, String mac, String type, int icon) {
+    //COMMNTED ICON VALUE PUT AND DELETED THE ICON PARAMETER BECUASE IT WILL BE ENOUGH TO STATE THE DEVICE'S TYPE
+    public long createDevice(String displayName, String mac, Long deviceTypeId) {
         // If the database is not open yet, open it
         if (!database.isOpen())
             open();
@@ -45,11 +46,26 @@ public class DataSource {
         ContentValues values = new ContentValues();
         values.put(MySQLiteHelper.COLUMN_DEVICE_DISPLAY_NAME, displayName);
         values.put(MySQLiteHelper.COLUMN_DEVICE_MAC, mac);
-        values.put(MySQLiteHelper.COLUMN_DEVICE_TYPE, type);
-        values.put(MySQLiteHelper.COLUMN_DEVICE_ICON, icon);
+        values.put(MySQLiteHelper.COLUMN_DEVICE_TYPE_ID, deviceTypeId);
         long insertId = database.insert(MySQLiteHelper.TABLE_DEVICE, null, values);
 
         // If the database is open, close it
+        if (database.isOpen())
+            close();
+
+        return insertId;
+    }
+
+    public long createDeviceType(String name, int icon) {
+
+        if (!database.isOpen())
+            open();
+
+        ContentValues values = new ContentValues();
+        values.put(MySQLiteHelper.COLUMN_DEVICE_TYPE_NAME, name);
+        values.put(MySQLiteHelper.COLUMN_DEVICE_TYPE_ICON, icon);
+        long insertId = database.insert(MySQLiteHelper.TABLE_DEVICE_TYPE, null, values);
+
         if (database.isOpen())
             close();
 
@@ -72,7 +88,7 @@ public class DataSource {
             close();
     }
 
-    public void updateDevice(Device device, String title) {
+    public void updateDevice(Device device, int deviceTypeId) {
 
         if (!database.isOpen())
 
@@ -80,7 +96,7 @@ public class DataSource {
 
         ContentValues args = new ContentValues();
 
-        args.put(MySQLiteHelper.COLUMN_DEVICE_TYPE, title);
+        args.put(MySQLiteHelper.COLUMN_DEVICE_TYPE_ID, deviceTypeId);
 
         //args.put(MySQLiteHelper.COLUMN_COURSE_ID, assignment.getCourse().getId());
 
@@ -104,7 +120,7 @@ public class DataSource {
 
                         MySQLiteHelper.COLUMN_DEVICE_ID + " AS _id," +
 
-                        MySQLiteHelper.COLUMN_DEVICE_TYPE +
+                        MySQLiteHelper.COLUMN_DEVICE_TYPE_ID +
 
                         " FROM " + MySQLiteHelper.TABLE_DEVICE, null);
 
@@ -127,15 +143,19 @@ public class DataSource {
         try {
 
             Device device = new Device();
+            DeviceType deviceType = new DeviceType();
 
             device.setId(cursor.getLong(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_ID)));
 
             device.setDisplayName(cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_DISPLAY_NAME)));
 
-            device.setDeviceType(cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_TYPE)));
+            deviceType.setId(cursor.getLong(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_TYPE_ID)));
 
-            device.setIcon(cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_ICON)));
+            deviceType.setName(cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_TYPE_NAME)));
 
+            deviceType.setIcon(cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_TYPE_ICON)));
+
+            device.setDeviceType(deviceType);
 
             return device;
 
@@ -184,9 +204,11 @@ public class DataSource {
 
         Cursor cursor = database.rawQuery(
 
-                "SELECT * " +
-                        "FROM " + MySQLiteHelper.TABLE_DEVICE +
-                        " WHERE " + MySQLiteHelper.COLUMN_DEVICE_MAC + " = '" + macAddress + "'", null);
+                "SELECT device.*, deviceType.* " +
+                        " FROM " + MySQLiteHelper.TABLE_DEVICE +
+                        " INNER JOIN " + MySQLiteHelper.TABLE_DEVICE_TYPE +
+                        " ON device." + MySQLiteHelper.COLUMN_DEVICE_TYPE_ID + " = deviceType." + MySQLiteHelper.COLUMN_DEVICE_TYPE_ID +
+                        " WHERE device." + MySQLiteHelper.COLUMN_DEVICE_MAC + " = '" + macAddress + "'", null);
 
         cursor.moveToFirst();
         Device device = cursorToDevice(cursor);
@@ -196,6 +218,51 @@ public class DataSource {
             close();
 
         return device;
+    }
+
+    private DeviceType cursorToDeviceType(Cursor cursor) {
+
+        try {
+
+            DeviceType deviceType = new DeviceType();
+
+            deviceType.setId(cursor.getLong(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_TYPE_ID)));
+
+            deviceType.setName(cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_TYPE_NAME)));
+
+            deviceType.setIcon(cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_DEVICE_TYPE_ICON)));
+
+            return deviceType;
+
+        } catch(CursorIndexOutOfBoundsException exception) {
+
+            exception.printStackTrace();
+
+            return null;
+
+        }
+
+    }
+
+    public DeviceType getDeviceType(String name) {
+
+        if (!database.isOpen())
+            open();
+
+        Cursor cursor = database.rawQuery(
+
+                "SELECT * " +
+                        "FROM " + MySQLiteHelper.TABLE_DEVICE_TYPE +
+                        " WHERE " + MySQLiteHelper.COLUMN_DEVICE_TYPE_NAME + " = '" + name + "'", null);
+
+        cursor.moveToFirst();
+        DeviceType deviceType = cursorToDeviceType(cursor);
+        cursor.close();
+
+        if (database.isOpen())
+            close();
+
+        return deviceType;
     }
 
 }

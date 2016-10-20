@@ -77,6 +77,10 @@ public class MainActivity extends AppCompatActivity {
         deviceAdapter = new DeviceAdapter(listOfDevices, this);
         deviceRecyclerView.setAdapter(deviceAdapter);
 
+//        datasource.createDeviceType("Unknown", R.drawable.ic_unknown_device_white_45dp);
+//        datasource.createDeviceType("Wall plug", R.drawable.wallplug_white);
+//        datasource.createDeviceType("Siren", R.drawable.siren_icon_white);
+
         bluetoothSetup();
 
         discoverDevices.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +99,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         listOfDevices.clear();
+        deviceAdapter = new DeviceAdapter(listOfDevices, context);
+        deviceRecyclerView.setAdapter(deviceAdapter);
+
         bluetoothSetup();
         bluetoothDiscoverDevices();
     }
@@ -183,17 +190,15 @@ public class MainActivity extends AppCompatActivity {
 
                 Device deviceRetrievedFromDatabase = datasource.getDevice(device.getAddress());
                 int iconForDevice;
-                String deviceType;
+                DeviceType deviceType;
 
                 // If not null, then the device is present in the database
                 if(deviceRetrievedFromDatabase != null) {
-                    iconForDevice = deviceRetrievedFromDatabase.getIcon();
                     deviceType = deviceRetrievedFromDatabase.getDeviceType();
-                    listOfDevices.add(new Device(iconForDevice,deviceRetrievedFromDatabase.getDisplayName(), deviceType, device));
+                    listOfDevices.add(new Device(deviceRetrievedFromDatabase.getDisplayName(), deviceType, device));
                 } else {
-                    iconForDevice = R.drawable.ic_unknown_device_white_45dp;
-                    deviceType = "unknownDeviceType";
-                    listOfDevices.add(new Device(iconForDevice,device.getName(), deviceType, device));
+                    deviceType = datasource.getDeviceType("Unknown");
+                    listOfDevices.add(new Device(device.getName(), deviceType, device));
                 }
 
                 deviceAdapter = new DeviceAdapter(listOfDevices, context);
