@@ -2,12 +2,14 @@ package nl.groenier.android.bluetoothdevicecontrollerapp;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,11 +26,14 @@ import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
 
 public class DeviceControlFlashingLightActivity extends AppCompatActivity {
 
+    private ImageButton imageButtonSettings;
     private Button buttonTurnOn;
     private Button buttonTurnOff;
     private Button buttonUnregisterDevice;
 
     private BluetoothDevice connectedBluetoothDevice;
+    private Long deviceToControlId;
+    private Device deviceToControl;
     private String deviceToControlMac;
     private String deviceToControlDisplayName;
     private UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -44,19 +49,32 @@ public class DeviceControlFlashingLightActivity extends AppCompatActivity {
 
         datasource = new DataSource(this);
 
+        imageButtonSettings = (ImageButton) findViewById(R.id.image_button_flashing_light_settings);
         buttonTurnOn = (Button) findViewById(R.id.button_device_control_flashing_light_turn_on);
         buttonTurnOff = (Button) findViewById(R.id.button_device_control_flashing_light_turn_off);
         buttonUnregisterDevice = (Button) findViewById(R.id.button_device_control_flashing_light_unregister);
 
+        deviceToControlId = getIntent().getLongExtra("selectedDeviceId",0);
+        deviceToControl = datasource.getDevice(deviceToControlId);
+
         connectedBluetoothDevice = getIntent().getExtras().getParcelable("connectedBluetoothDevice");
-        deviceToControlMac = getIntent().getStringExtra("selectedDeviceMac");
-        deviceToControlDisplayName = getIntent().getStringExtra("selectedDeviceDisplayName");
+        deviceToControlMac = deviceToControl.getMacAddress();
+        deviceToControlDisplayName = deviceToControl.getDisplayName();
 
         bluetoothSetupSocket(connectedBluetoothDevice);
         bluetoothConnect();
 
         getSupportActionBar().setTitle("Siren: " + deviceToControlDisplayName);
 
+
+        imageButtonSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentStartDeviceSettings = new Intent(DeviceControlFlashingLightActivity.this, DeviceSettingsActivity.class);
+                intentStartDeviceSettings.putExtra("selectedDeviceId", deviceToControlId);
+                DeviceControlFlashingLightActivity.this.startActivity(intentStartDeviceSettings);
+            }
+        });
 
         buttonTurnOn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +95,7 @@ public class DeviceControlFlashingLightActivity extends AppCompatActivity {
         buttonUnregisterDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                datasource.deleteDevice(deviceToControlMac);
+                datasource.deleteDevice(deviceToControlId);
                 Toast.makeText(DeviceControlFlashingLightActivity.this, "Device deleted!", Toast.LENGTH_SHORT).show();
                 finish();
             }

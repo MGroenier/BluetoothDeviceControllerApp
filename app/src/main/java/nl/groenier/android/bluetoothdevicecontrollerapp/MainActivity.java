@@ -189,13 +189,12 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Device deviceRetrievedFromDatabase = datasource.getDevice(device.getAddress());
-                int iconForDevice;
                 DeviceType deviceType;
 
                 // If not null, then the device is present in the database
                 if(deviceRetrievedFromDatabase != null) {
                     deviceType = deviceRetrievedFromDatabase.getDeviceType();
-                    listOfDevices.add(new Device(deviceRetrievedFromDatabase.getDisplayName(), deviceType, device));
+                    listOfDevices.add(new Device(deviceRetrievedFromDatabase.getId(), deviceRetrievedFromDatabase.getDisplayName(), deviceType, device.getAddress(), device));
                 } else {
                     deviceType = datasource.getDeviceType("Unknown");
                     listOfDevices.add(new Device(device.getName(), deviceType, device));

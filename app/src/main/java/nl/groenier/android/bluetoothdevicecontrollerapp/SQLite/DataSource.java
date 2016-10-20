@@ -88,7 +88,7 @@ public class DataSource {
             close();
     }
 
-    public void updateDevice(Device device, int deviceTypeId) {
+    public void updateDevice(Long deviceId, String displayName, Long deviceTypeId) {
 
         if (!database.isOpen())
 
@@ -96,11 +96,11 @@ public class DataSource {
 
         ContentValues args = new ContentValues();
 
+        args.put(MySQLiteHelper.COLUMN_DEVICE_DISPLAY_NAME, displayName);
+
         args.put(MySQLiteHelper.COLUMN_DEVICE_TYPE_ID, deviceTypeId);
 
-        //args.put(MySQLiteHelper.COLUMN_COURSE_ID, assignment.getCourse().getId());
-
-        database.update(MySQLiteHelper.TABLE_DEVICE, args, MySQLiteHelper.COLUMN_DEVICE_ID + "=?", new String[] { Long.toString(device.getId()) });
+        database.update(MySQLiteHelper.TABLE_DEVICE, args, MySQLiteHelper.COLUMN_DEVICE_ID + "=?", new String[] { Long.toString(deviceId) });
 
         if (database.isOpen())
 
@@ -172,25 +172,21 @@ public class DataSource {
     public Device getDevice(long columnId) {
 
         if (!database.isOpen())
-
             open();
 
         Cursor cursor = database.rawQuery(
 
-                "SELECT * " +
-
-                        " FROM " + MySQLiteHelper.TABLE_DEVICE + " assignments" +
-
-                        " WHERE " + MySQLiteHelper.COLUMN_DEVICE_ID + " = " + columnId, null);
+                "SELECT device.*, deviceType.* " +
+                        " FROM " + MySQLiteHelper.TABLE_DEVICE +
+                        " INNER JOIN " + MySQLiteHelper.TABLE_DEVICE_TYPE +
+                        " ON device." + MySQLiteHelper.COLUMN_DEVICE_TYPE_ID + " = deviceType." + MySQLiteHelper.COLUMN_DEVICE_TYPE_ID +
+                        " WHERE device." + MySQLiteHelper.COLUMN_DEVICE_ID + " = '" + columnId + "'", null);
 
         cursor.moveToFirst();
-
         Device device = cursorToDevice(cursor);
-
         cursor.close();
 
         if (database.isOpen())
-
             close();
 
         return device;

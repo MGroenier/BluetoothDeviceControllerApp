@@ -93,8 +93,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
                         intentStartDeviceControl = new Intent(context, DeviceControlFlashingLightActivity.class);
                         break;
                 }
-                intentStartDeviceControl.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());
-                intentStartDeviceControl.putExtra("selectedDeviceDisplayName", selectedDevice.getDisplayName());
+                intentStartDeviceControl.putExtra("selectedDeviceId", selectedDevice.getId());
                 intentStartDeviceControl.putExtra("connectedBluetoothDevice", selectedDevice.getBluetoothDevice());
                 context.startActivity(intentStartDeviceControl);
 

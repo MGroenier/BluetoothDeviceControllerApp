@@ -13,12 +13,14 @@ public class Device implements Serializable {
     private long id;
     private String displayName;
     private DeviceType deviceType;
+    private String macAddress;
     private BluetoothDevice mBluetoothDevice;
 
-    public Device(long id, String displayName, DeviceType deviceType, BluetoothDevice bluetoothDevice) {
+    public Device(long id, String displayName, DeviceType deviceType, String macAddress, BluetoothDevice bluetoothDevice) {
         this.id = id;
         this.displayName = displayName;
         this.deviceType = deviceType;
+        this.macAddress = macAddress;
         mBluetoothDevice = bluetoothDevice;
     }
 
@@ -54,6 +56,14 @@ public class Device implements Serializable {
 
     public void setDeviceType(DeviceType deviceType) {
         this.deviceType = deviceType;
+    }
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
     }
 
     public BluetoothDevice getBluetoothDevice() {

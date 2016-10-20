@@ -1,39 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:padding="16dp">
-    
+
     <ImageView
+        android:id="@+id/image_view_flashing_light_icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:src="@drawable/siren_icon"/>
 
+    <ImageButton
+        android:id="@+id/image_button_flashing_light_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_settings_black_24dp"
+        android:background="@null"/>
+
     <TextView
+        android:id="@+id/text_view_flashing_light_control"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/image_view_flashing_light_icon"
         android:layout_marginTop="20dp"
-        android:text="Flashing Light Control, here you'll be able to control the selected device."/>
+        android:text="Siren Control, here you'll be able to control the selected device."/>
 
     <Button
         android:id="@+id/button_device_control_flashing_light_turn_on"
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
         android:layout_height="50dp"
-        android:text="On"/>
+        android:layout_below="@id/text_view_flashing_light_control"
+        android:layout_marginTop="16dp"
+        android:text="On"
+        android:textColor="#FFF"
+        android:background="@drawable/shape_button_device_control"/>
 
     <Button
         android:id="@+id/button_device_control_flashing_light_turn_off"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="Off"/>
+        android:layout_below="@id/button_device_control_flashing_light_turn_on"
+        android:layout_marginTop="16dp"
+        android:text="Off"
+        android:textColor="#FFF"
+        android:background="@drawable/shape_button_device_control"/>
 
     <Button
         android:id="@+id/button_device_control_flashing_light_unregister"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="Unregister this device"/>
+        android:layout_alignParentBottom="true"
+        android:text="Unregister this device"
+        android:textColor="#FFF"
+        android:background="@drawable/shape_button_device_control"/>
 
-</LinearLayout>
+</RelativeLayout>
