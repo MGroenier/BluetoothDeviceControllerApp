@@ -17,7 +17,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_settings_black_24dp"
+        android:src="@drawable/ic_settings_black_45dp"
+        android:background="@null"/>
+
+    <ImageButton
+        android:id="@+id/button_device_control_wallplug_unregister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_button_wall_plug_settings"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_delete_black_45dp"
         android:background="@null"/>
 
     <TextView
@@ -45,15 +54,6 @@
         android:layout_below="@id/button_device_control_wallplug_turn_on"
         android:layout_marginTop="16dp"
         android:text="Off"
-        android:textColor="#FFF"
-        android:background="@drawable/shape_button_device_control"/>
-
-    <Button
-        android:id="@+id/button_device_control_wallplug_unregister"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:text="Unregister this device"
         android:textColor="#FFF"
         android:background="@drawable/shape_button_device_control"/>
 

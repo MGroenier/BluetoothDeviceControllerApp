@@ -29,7 +29,7 @@ public class DeviceControlFlashingLightActivity extends AppCompatActivity {
     private ImageButton imageButtonSettings;
     private Button buttonTurnOn;
     private Button buttonTurnOff;
-    private Button buttonUnregisterDevice;
+    private ImageButton buttonUnregisterDevice;
 
     private BluetoothDevice connectedBluetoothDevice;
     private Long deviceToControlId;
@@ -52,7 +52,7 @@ public class DeviceControlFlashingLightActivity extends AppCompatActivity {
         imageButtonSettings = (ImageButton) findViewById(R.id.image_button_flashing_light_settings);
         buttonTurnOn = (Button) findViewById(R.id.button_device_control_flashing_light_turn_on);
         buttonTurnOff = (Button) findViewById(R.id.button_device_control_flashing_light_turn_off);
-        buttonUnregisterDevice = (Button) findViewById(R.id.button_device_control_flashing_light_unregister);
+        buttonUnregisterDevice = (ImageButton) findViewById(R.id.button_device_control_flashing_light_unregister);
 
         deviceToControlId = getIntent().getLongExtra("selectedDeviceId",0);
         deviceToControl = datasource.getDevice(deviceToControlId);

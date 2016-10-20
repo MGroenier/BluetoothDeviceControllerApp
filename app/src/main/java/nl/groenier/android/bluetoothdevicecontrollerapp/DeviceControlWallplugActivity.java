@@ -29,7 +29,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
     private ImageButton imageButtonSettings;
     private Button buttonTurnOn;
     private Button buttonTurnOff;
-    private Button buttonUnregisterDevice;
+    private ImageButton buttonUnregisterDevice;
 
     private BluetoothDevice connectedBluetoothDevice;
     private Long deviceToControlId;
@@ -52,7 +52,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
         imageButtonSettings = (ImageButton) findViewById(R.id.image_button_wall_plug_settings);
         buttonTurnOn = (Button) findViewById(R.id.button_device_control_wallplug_turn_on);
         buttonTurnOff = (Button) findViewById(R.id.button_device_control_wallplug_turn_off);
-        buttonUnregisterDevice = (Button) findViewById(R.id.button_device_control_wallplug_unregister);
+        buttonUnregisterDevice = (ImageButton) findViewById(R.id.button_device_control_wallplug_unregister);
 
         deviceToControlId = getIntent().getLongExtra("selectedDeviceId",0);
         deviceToControl = datasource.getDevice(deviceToControlId);
