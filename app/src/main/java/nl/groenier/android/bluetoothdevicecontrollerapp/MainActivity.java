@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
+import nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity.bluetooth.BluetoothHandler;
 import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
 import nl.groenier.android.bluetoothdevicecontrollerapp.model.DeviceType;
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private List listOfDevices;
 
     private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothHandler mBluetoothHandler;
 
     private DataSource datasource;
 
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         datasource = new DataSource(this);
+        mBluetoothHandler = new BluetoothHandler(this);
 
         if(datasource.getDeviceType("Unknown") == null) {
             populateDatabase();
@@ -75,13 +78,11 @@ public class MainActivity extends AppCompatActivity {
         deviceAdapter = new DeviceAdapter(listOfDevices, this);
         deviceRecyclerView.setAdapter(deviceAdapter);
 
-        bluetoothSetup();
-
         discoverDevices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listOfDevices.clear();
-                bluetoothSetup();
+                mBluetoothHandler.bluetoothSetup();
                 bluetoothDiscoverDevices();
             }
         });
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         deviceAdapter = new DeviceAdapter(listOfDevices, MainActivity.this);
         deviceRecyclerView.setAdapter(deviceAdapter);
 
-        bluetoothSetup();
+        mBluetoothHandler.bluetoothSetup();
         bluetoothDiscoverDevices();
     }
 
@@ -115,16 +116,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void bluetoothSetup() {
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter == null) {
-            Toast.makeText(this, "This device does not support Bluetooth.", Toast.LENGTH_SHORT).show();
-        }
-        if(!mBluetoothAdapter.isEnabled()) {
-            Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BT);
-        }
-    }
+//    public void bluetoothSetup() {
+//        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        if (mBluetoothAdapter == null) {
+//            Toast.makeText(this, "This device does not support Bluetooth.", Toast.LENGTH_SHORT).show();
+//        }
+//        if(!mBluetoothAdapter.isEnabled()) {
+//            Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BT);
+//        }
+//    }
 
     public void bluetoothDiscoverDevices() {
         if (mBluetoothAdapter != null) {

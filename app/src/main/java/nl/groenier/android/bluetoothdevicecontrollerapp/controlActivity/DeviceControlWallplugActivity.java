@@ -80,7 +80,6 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 write("0".getBytes());
-                Toast.makeText(DeviceControlWallplugActivity.this, "STUB, Turn on!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -88,7 +87,6 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 write("1".getBytes());
-                Toast.makeText(DeviceControlWallplugActivity.this, "STUB, Turn off!", Toast.LENGTH_SHORT).show();
             }
         });
 
