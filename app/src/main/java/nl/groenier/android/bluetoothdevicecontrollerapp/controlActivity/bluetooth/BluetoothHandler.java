@@ -2,9 +2,19 @@ package nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity.bluetoo
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Parcelable;
+import android.util.Log;
 import android.widget.Toast;
+
+import nl.groenier.android.bluetoothdevicecontrollerapp.DeviceAdapter;
+import nl.groenier.android.bluetoothdevicecontrollerapp.MainActivity;
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.DeviceType;
 
 import static nl.groenier.android.bluetoothdevicecontrollerapp.MainActivity.REQUEST_ENABLE_BT;
 
@@ -13,8 +23,6 @@ import static nl.groenier.android.bluetoothdevicecontrollerapp.MainActivity.REQU
  */
 
 public class BluetoothHandler {
-
-    //public static final int REQUEST_ENABLE_BT = 0001;
 
     private BluetoothAdapter mBluetoothAdapter;
     private Context mContext;
@@ -25,6 +33,14 @@ public class BluetoothHandler {
         if (mContext instanceof Activity) {
             mActivity = (Activity) context;
         }
+    }
+
+    public BluetoothAdapter getBluetoothAdapter() {
+        return mBluetoothAdapter;
+    }
+
+    public void startBluetoothDiscovery() {
+        mBluetoothAdapter.startDiscovery();
     }
 
     public void bluetoothSetup() {

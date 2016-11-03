@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_ENABLE_BT = 0001;
 
-    private ImageButton discoverDevices;
+    private ImageButton ImageButtonDiscoverDevices;
     private ImageView scanPulseShape;
     private Animation scanPulseAnimation;
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             populateDatabase();
         }
 
-        discoverDevices = (ImageButton) findViewById(R.id.button_discover_devices);
+        ImageButtonDiscoverDevices = (ImageButton) findViewById(R.id.button_discover_devices);
         scanPulseShape = (ImageView) findViewById(R.id.image_view_scan_shape);
         scanPulseAnimation = AnimationUtils.loadAnimation(this, R.anim.scan);
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         deviceAdapter = new DeviceAdapter(listOfDevices, this);
         deviceRecyclerView.setAdapter(deviceAdapter);
 
-        discoverDevices.setOnClickListener(new View.OnClickListener() {
+        ImageButtonDiscoverDevices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listOfDevices.clear();
@@ -128,8 +128,8 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
     public void bluetoothDiscoverDevices() {
-        if (mBluetoothAdapter != null) {
-            mBluetoothAdapter.startDiscovery();
+        if (mBluetoothHandler.getBluetoothAdapter() != null) {
+            mBluetoothHandler.startBluetoothDiscovery();
             // Register the BroadcastReceiver for discovering a new device
             IntentFilter filterDeviceFound = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             registerReceiver(mReceiverDeviceFound, filterDeviceFound);
@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
             // When discovery starts
             if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
-                discoverDevices.setEnabled(false);
-                // Stop the animation of the discoverDevices Button
+                ImageButtonDiscoverDevices.setEnabled(false);
+                // Stop the animation of the ImageButtonDiscoverDevices Button
                 scanPulseShape.startAnimation(scanPulseAnimation);
             }
         }
@@ -161,8 +161,8 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
             // When discovery ends
             if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                discoverDevices.setEnabled(true);
-                //Stop the animation of the discoverDevices Button
+                ImageButtonDiscoverDevices.setEnabled(true);
+                //Stop the animation of the ImageButtonDiscoverDevices Button
                 scanPulseShape.clearAnimation();
             }
         }
