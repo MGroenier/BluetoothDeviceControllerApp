@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -27,6 +28,7 @@ import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
 
 public class DeviceControlWallplugActivity extends AppCompatActivity {
 
+    private ImageView mImageViewTopImage;
     private ImageButton imageButtonSettings;
     private Button buttonTurnOn;
     private Button buttonTurnOff;
@@ -53,6 +55,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
 
         mParentLayout = findViewById(android.R.id.content);
 
+        mImageViewTopImage = (ImageView) findViewById(R.id.image_view_wall_plug_icon);
         imageButtonSettings = (ImageButton) findViewById(R.id.image_button_wall_plug_settings);
         buttonTurnOn = (Button) findViewById(R.id.button_device_control_wallplug_turn_on);
         buttonTurnOff = (Button) findViewById(R.id.button_device_control_wallplug_turn_off);
@@ -84,6 +87,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 write("0".getBytes());
+                mImageViewTopImage.setImageResource(R.drawable.wallplug_on);
             }
         });
 
@@ -91,6 +95,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 write("1".getBytes());
+                mImageViewTopImage.setImageResource(R.drawable.wallplug);
             }
         });
 
