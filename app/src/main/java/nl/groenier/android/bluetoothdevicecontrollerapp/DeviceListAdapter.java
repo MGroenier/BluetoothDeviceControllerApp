@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 
 import java.util.List;
 
-import nl.groenier.android.bluetoothdevicecontrollerapp.R;
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
 
 /**
  * Created by Martijn on 08/10/2016.

@@ -3,10 +3,8 @@ package nl.groenier.android.bluetoothdevicecontrollerapp;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.DeviceType;
 
 /**
  * Created by Martijn on 09/10/2016.

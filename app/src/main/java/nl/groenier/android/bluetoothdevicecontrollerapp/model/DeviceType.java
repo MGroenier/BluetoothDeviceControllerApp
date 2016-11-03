@@ -1,4 +1,4 @@
-package nl.groenier.android.bluetoothdevicecontrollerapp;
+package nl.groenier.android.bluetoothdevicecontrollerapp.model;
 
 /**
  * Created by Martijn on 19/10/2016.

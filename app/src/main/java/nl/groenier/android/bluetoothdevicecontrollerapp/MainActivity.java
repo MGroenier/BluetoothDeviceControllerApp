@@ -2,7 +2,6 @@ package nl.groenier.android.bluetoothdevicecontrollerapp;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,18 +16,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.DeviceType;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter deviceAdapter;
     private RecyclerView.LayoutManager deviceLayoutManager;
 
-    private Context context;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +52,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        context = this;
         datasource = new DataSource(this);
+
+        if(datasource.getDeviceType("Unknown") == null) {
+            populateDatabase();
+        }
 
         discoverDevices = (ImageButton) findViewById(R.id.button_discover_devices);
         scanPulseShape = (ImageView) findViewById(R.id.image_view_scan_shape);
@@ -76,10 +74,6 @@ public class MainActivity extends AppCompatActivity {
         // Specyfing an adapter
         deviceAdapter = new DeviceAdapter(listOfDevices, this);
         deviceRecyclerView.setAdapter(deviceAdapter);
-
-//        datasource.createDeviceType("Unknown", R.drawable.ic_unknown_device_white_45dp);
-//        datasource.createDeviceType("Wall plug", R.drawable.wallplug_white);
-//        datasource.createDeviceType("Siren", R.drawable.siren_icon_white);
 
         bluetoothSetup();
 
@@ -99,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         listOfDevices.clear();
-        deviceAdapter = new DeviceAdapter(listOfDevices, context);
+        deviceAdapter = new DeviceAdapter(listOfDevices, MainActivity.this);
         deviceRecyclerView.setAdapter(deviceAdapter);
 
         bluetoothSetup();
@@ -200,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                     listOfDevices.add(new Device(device.getName(), deviceType, device));
                 }
 
-                deviceAdapter = new DeviceAdapter(listOfDevices, context);
+                deviceAdapter = new DeviceAdapter(listOfDevices, MainActivity.this);
                 deviceRecyclerView.setAdapter(deviceAdapter);
             }
         }
@@ -212,4 +206,11 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(mReceiverDeviceFound);
         unregisterReceiver(mReceiverDiscoveryFinished);
     }
+
+    private void populateDatabase(){
+        datasource.createDeviceType("Unknown", R.drawable.ic_unknown_device_white_45dp);
+        datasource.createDeviceType("Wall plug", R.drawable.wallplug_white);
+        datasource.createDeviceType("Siren", R.drawable.siren_icon_white);
+    }
+
 }

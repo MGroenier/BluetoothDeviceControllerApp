@@ -4,6 +4,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
+
 /**
  * Created by Martijn on 08/10/2016.
  */

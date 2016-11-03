@@ -1,4 +1,4 @@
-package nl.groenier.android.bluetoothdevicecontrollerapp;
+package nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -6,19 +6,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
 
+import nl.groenier.android.bluetoothdevicecontrollerapp.DeviceSettingsActivity;
 import nl.groenier.android.bluetoothdevicecontrollerapp.R;
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
 
 /**
  * Created by Martijn on 09/10/2016.

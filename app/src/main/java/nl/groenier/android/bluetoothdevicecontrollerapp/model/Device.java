@@ -1,4 +1,4 @@
-package nl.groenier.android.bluetoothdevicecontrollerapp;
+package nl.groenier.android.bluetoothdevicecontrollerapp.model;
 
 import android.bluetooth.BluetoothDevice;
 

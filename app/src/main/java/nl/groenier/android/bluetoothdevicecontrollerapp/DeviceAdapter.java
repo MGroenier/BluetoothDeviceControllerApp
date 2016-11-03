@@ -9,9 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
+
+import nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity.DeviceControlFlashingLightActivity;
+import nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity.DeviceControlWallplugActivity;
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
 
 /**
  * Created by Martijn on 18/10/2016.

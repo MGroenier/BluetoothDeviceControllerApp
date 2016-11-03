@@ -33,8 +33,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="nl.groenier.android.bluetoothdevicecontrollerapp.DeviceControlFlashingLightActivity" />
-        <activity android:name="nl.groenier.android.bluetoothdevicecontrollerapp.DeviceControlWallplugActivity" />
+        <activity android:name="nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity.DeviceControlFlashingLightActivity" />
+        <activity android:name="nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity.DeviceControlWallplugActivity" />
 
         <activity android:name="nl.groenier.android.bluetoothdevicecontrollerapp.DeviceRegisterActivity" />
         <activity android:name="nl.groenier.android.bluetoothdevicecontrollerapp.DeviceSettingsActivity" />

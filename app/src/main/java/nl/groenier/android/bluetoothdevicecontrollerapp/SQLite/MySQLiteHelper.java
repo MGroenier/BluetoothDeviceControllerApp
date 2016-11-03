@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import nl.groenier.android.bluetoothdevicecontrollerapp.R;
+
 /**
  * Created by Martijn on 29/09/2016.
  */
@@ -12,7 +14,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     // Database info
     private static final String DATABASE_NAME = "bluetooth_application.db";
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 16;
 
     // device table
     public static final String TABLE_DEVICE = "device";

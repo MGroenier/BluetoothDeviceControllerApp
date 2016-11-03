@@ -7,8 +7,8 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import nl.groenier.android.bluetoothdevicecontrollerapp.Device;
-import nl.groenier.android.bluetoothdevicecontrollerapp.DeviceType;
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.DeviceType;
 
 /**
  * Created by Martijn on 29/09/2016.
