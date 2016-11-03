@@ -2,9 +2,18 @@ package nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity.bluetoo
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.UUID;
 
 import static nl.groenier.android.bluetoothdevicecontrollerapp.MainActivity.REQUEST_ENABLE_BT;
 
@@ -14,9 +23,20 @@ import static nl.groenier.android.bluetoothdevicecontrollerapp.MainActivity.REQU
 
 public class BluetoothHandler {
 
+    private ConnectThread connectThread;
     private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothDevice connectedBluetoothDevice;
+    private UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private BluetoothSocket socket;
+    private OutputStream outputStream;
+
     private Context mContext;
     private Activity mActivity;
+    private View view;
+
+    public BluetoothHandler(View view) {
+        this.view = view;
+    }
 
     public BluetoothHandler(Context context) {
         this.mContext = context;
@@ -45,6 +65,122 @@ public class BluetoothHandler {
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             mActivity.startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BT);
+        }
+    }
+
+//    public void bluetoothSetupSocket(BluetoothDevice device) {
+//        // Use a temporary object that is later assigned to mmSocket,
+//        // because mmSocket is final
+//        BluetoothSocket tmp = null;
+//        connectedBluetoothDevice = device;
+//
+//        // Get a BluetoothSocket to connect with the given BluetoothDevice
+//        try {
+//            // MY_UUID is the app's UUID string, also used by the server code
+//            tmp = device.createRfcommSocketToServiceRecord(uuid);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        socket = tmp;
+//    }
+
+    public void bluetoothSetupSocket(BluetoothDevice device) {
+        connectThread = new ConnectThread(device);
+        connectThread.run();
+    }
+
+//    public void bluetoothConnectToSocket() {
+//        // The discovery can be cancelled now, we found our device
+//        try {
+//            socket.connect();
+//        }
+//        catch (IOException connectException) {
+//            // Not able to connect, close the socket and get out
+//            Snackbar.make(view,"Could not connect!", Snackbar.LENGTH_SHORT).show();
+//            try {
+//                socket.close();
+//            } catch (IOException closeException) { }
+//            return;
+//        }
+//        Snackbar.make(view,"Connected successfully!", Snackbar.LENGTH_SHORT).show();
+//        bluetoothConnectGetOutputstream();
+//    }
+
+//    public void bluetoothConnectGetOutputstream() {
+//        try {
+//            outputStream = socket.getOutputStream();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public void closeSocket() {
+//        try {
+//            socket.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        connectThread.cancel();
+    }
+
+    public void write(byte[] bytes) {
+        try {
+            outputStream.write(bytes);
+        } catch (IOException e) {
+            //Toast.makeText(this, "Failed to write!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class ConnectThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final BluetoothDevice mmDevice;
+
+        public ConnectThread(BluetoothDevice device) {
+            // Use a temporary object that is later assigned to mmSocket,
+            // because mmSocket is final
+            BluetoothSocket tmp = null;
+            mmDevice = device;
+
+            // Get a BluetoothSocket to connect with the given BluetoothDevice
+            try {
+                // MY_UUID is the app's UUID string, also used by the server code
+                tmp = device.createRfcommSocketToServiceRecord(uuid);
+            } catch (IOException e) { }
+            mmSocket = tmp;
+        }
+
+        public void run() {
+            // Cancel discovery because it will slow down the connection
+            //mBluetoothAdapter.cancelDiscovery();
+
+            try {
+                // Connect the device through the socket. This will block
+                // until it succeeds or throws an exception
+                mmSocket.connect();
+            } catch (IOException connectException) {
+                // Unable to connect; close the socket and get out
+                try {
+                    mmSocket.close();
+                } catch (IOException closeException) { }
+                return;
+            }
+
+            try {
+            outputStream = mmSocket.getOutputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Do work to manage the connection (in a separate thread)
+            //manageConnectedSocket(mmSocket);
+        }
+
+        /** Will cancel an in-progress connection, and close the socket */
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) { }
         }
     }
 

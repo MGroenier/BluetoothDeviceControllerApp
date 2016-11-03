@@ -20,6 +20,7 @@ import java.util.UUID;
 import nl.groenier.android.bluetoothdevicecontrollerapp.DeviceSettingsActivity;
 import nl.groenier.android.bluetoothdevicecontrollerapp.R;
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
+import nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity.bluetooth.BluetoothHandler;
 import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
 
 /**
@@ -40,9 +41,8 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
     private Device deviceToControl;
     private String deviceToControlMac;
     private String deviceToControlDisplayName;
-    private UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private BluetoothSocket socket;
-    private OutputStream outputStream;
+
+    private BluetoothHandler mBluetoothHandler;
 
     private DataSource datasource;
 
@@ -51,9 +51,10 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_control_wallplug);
 
-        datasource = new DataSource(this);
-
         mParentLayout = findViewById(android.R.id.content);
+
+        datasource = new DataSource(this);
+        mBluetoothHandler = new BluetoothHandler(mParentLayout);
 
         mImageViewTopImage = (ImageView) findViewById(R.id.image_view_wall_plug_icon);
         imageButtonSettings = (ImageButton) findViewById(R.id.image_button_wall_plug_settings);
@@ -68,8 +69,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
         deviceToControlMac = deviceToControl.getMacAddress();
         deviceToControlDisplayName = deviceToControl.getDisplayName();
 
-        bluetoothSetupSocket(connectedBluetoothDevice);
-        bluetoothConnect();
+        mBluetoothHandler.bluetoothSetupSocket(connectedBluetoothDevice);
 
         getSupportActionBar().setTitle("Wall plug: " + deviceToControlDisplayName);
 
@@ -86,7 +86,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
         buttonTurnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                write("0".getBytes());
+                mBluetoothHandler.write("0".getBytes());
                 mImageViewTopImage.setImageResource(R.drawable.wallplug_on);
             }
         });
@@ -94,7 +94,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
         buttonTurnOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                write("1".getBytes());
+                mBluetoothHandler.write("1".getBytes());
                 mImageViewTopImage.setImageResource(R.drawable.wallplug);
             }
         });
@@ -113,68 +113,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void bluetoothSetupSocket(BluetoothDevice device) {
-        // Use a temporary object that is later assigned to mmSocket,
-        // because mmSocket is final
-        BluetoothSocket tmp = null;
-
-        connectedBluetoothDevice = device;
-
-        // Get a BluetoothSocket to connect with the given BluetoothDevice
-        try {
-            // MY_UUID is the app's UUID string, also used by the server code
-            tmp = device.createRfcommSocketToServiceRecord(uuid);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        socket = tmp;
-    }
-
-    public void bluetoothConnect() {
-        // The discovery can be cancelled now, we found our device
-        //mBluetoothAdapter.cancelDiscovery();
-
-        try {
-            socket.connect();
-        }
-        catch (IOException connectException) {
-            // Not able to connect, close the socket and get out
-            Toast.makeText(this, "Failed to connect to the socket!", Toast.LENGTH_SHORT).show();
-            try {
-                socket.close();
-            } catch (IOException closeException) { }
-            return;
-        }
-
-        //Toast.makeText(this, "Successfully connected to the socket!", Toast.LENGTH_SHORT).show();
-        Snackbar.make(mParentLayout,"Connected successfully!", Snackbar.LENGTH_SHORT).show();
-        bluetoothSendData();
-        //manageConnectedSocket(socket);
-
-    }
-
-    public void bluetoothSendData() {
-        try {
-            outputStream = socket.getOutputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Failed to get OutputStream.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void write(byte[] bytes) {
-        try {
-            outputStream.write(bytes);
-        } catch (IOException e) {
-            Toast.makeText(this, "Failed to write!", Toast.LENGTH_SHORT).show();
-        }
+        mBluetoothHandler.closeSocket();
     }
 
 }
