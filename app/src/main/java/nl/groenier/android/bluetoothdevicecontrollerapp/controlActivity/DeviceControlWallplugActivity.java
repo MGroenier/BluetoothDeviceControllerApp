@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +31,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
     private Button buttonTurnOn;
     private Button buttonTurnOff;
     private ImageButton buttonUnregisterDevice;
+    private View mParentLayout;
 
     private BluetoothDevice connectedBluetoothDevice;
     private Long deviceToControlId;
@@ -49,6 +51,8 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
 
         datasource = new DataSource(this);
 
+        mParentLayout = findViewById(android.R.id.content);
+
         imageButtonSettings = (ImageButton) findViewById(R.id.image_button_wall_plug_settings);
         buttonTurnOn = (Button) findViewById(R.id.button_device_control_wallplug_turn_on);
         buttonTurnOff = (Button) findViewById(R.id.button_device_control_wallplug_turn_off);
@@ -64,7 +68,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
         bluetoothSetupSocket(connectedBluetoothDevice);
         bluetoothConnect();
 
-        getSupportActionBar().setTitle("Siren: " + deviceToControlDisplayName);
+        getSupportActionBar().setTitle("Wall plug: " + deviceToControlDisplayName);
 
 
         imageButtonSettings.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +105,16 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void bluetoothSetupSocket(BluetoothDevice device) {
         // Use a temporary object that is later assigned to mmSocket,
         // because mmSocket is final
@@ -134,7 +148,8 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
             return;
         }
 
-        Toast.makeText(this, "Successfully connected to the socket!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Successfully connected to the socket!", Toast.LENGTH_SHORT).show();
+        Snackbar.make(mParentLayout,"Connected successfully!", Snackbar.LENGTH_SHORT).show();
         bluetoothSendData();
         //manageConnectedSocket(socket);
 

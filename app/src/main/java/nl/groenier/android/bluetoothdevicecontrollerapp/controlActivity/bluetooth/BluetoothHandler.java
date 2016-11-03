@@ -2,19 +2,9 @@ package nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity.bluetoo
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Parcelable;
-import android.util.Log;
 import android.widget.Toast;
-
-import nl.groenier.android.bluetoothdevicecontrollerapp.DeviceAdapter;
-import nl.groenier.android.bluetoothdevicecontrollerapp.MainActivity;
-import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
-import nl.groenier.android.bluetoothdevicecontrollerapp.model.DeviceType;
 
 import static nl.groenier.android.bluetoothdevicecontrollerapp.MainActivity.REQUEST_ENABLE_BT;
 
@@ -43,12 +33,16 @@ public class BluetoothHandler {
         mBluetoothAdapter.startDiscovery();
     }
 
+    public void cancelBluetoothDiscovery() {
+        mBluetoothAdapter.cancelDiscovery();
+    }
+
     public void bluetoothSetup() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             Toast.makeText(mContext, "This device does not support Bluetooth.", Toast.LENGTH_SHORT).show();
         }
-        if(!mBluetoothAdapter.isEnabled()) {
+        if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             mActivity.startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BT);
         }

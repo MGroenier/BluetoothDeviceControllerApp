@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 listOfDevices.clear();
+                deviceAdapter = new DeviceAdapter(listOfDevices, MainActivity.this);
+                deviceRecyclerView.setAdapter(deviceAdapter);
                 mBluetoothHandler.bluetoothSetup();
                 bluetoothDiscoverDevices();
             }
@@ -102,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mBluetoothHandler.cancelBluetoothDiscovery();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -116,16 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    public void bluetoothSetup() {
-//        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//        if (mBluetoothAdapter == null) {
-//            Toast.makeText(this, "This device does not support Bluetooth.", Toast.LENGTH_SHORT).show();
-//        }
-//        if(!mBluetoothAdapter.isEnabled()) {
-//            Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BT);
-//        }
-//    }
+    // Below all code related to the discovery and building of the recycler view.
 
     public void bluetoothDiscoverDevices() {
         if (mBluetoothHandler.getBluetoothAdapter() != null) {
