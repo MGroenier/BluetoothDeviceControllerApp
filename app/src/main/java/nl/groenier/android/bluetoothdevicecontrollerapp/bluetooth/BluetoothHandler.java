@@ -66,59 +66,12 @@ public class BluetoothHandler {
         }
     }
 
-//    public void bluetoothSetupSocket(BluetoothDevice device) {
-//        // Use a temporary object that is later assigned to mmSocket,
-//        // because mmSocket is final
-//        BluetoothSocket tmp = null;
-//        connectedBluetoothDevice = device;
-//
-//        // Get a BluetoothSocket to connect with the given BluetoothDevice
-//        try {
-//            // MY_UUID is the app's UUID string, also used by the server code
-//            tmp = device.createRfcommSocketToServiceRecord(uuid);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        socket = tmp;
-//    }
-
     public void bluetoothSetupSocket(BluetoothDevice device) {
         connectThread = new ConnectThread(device);
         connectThread.run();
     }
 
-//    public void bluetoothConnectToSocket() {
-//        // The discovery can be cancelled now, we found our device
-//        try {
-//            socket.connect();
-//        }
-//        catch (IOException connectException) {
-//            // Not able to connect, close the socket and get out
-//            Snackbar.make(view,"Could not connect!", Snackbar.LENGTH_SHORT).show();
-//            try {
-//                socket.close();
-//            } catch (IOException closeException) { }
-//            return;
-//        }
-//        Snackbar.make(view,"Connected successfully!", Snackbar.LENGTH_SHORT).show();
-//        bluetoothConnectGetOutputstream();
-//    }
-
-//    public void bluetoothConnectGetOutputstream() {
-//        try {
-//            outputStream = socket.getOutputStream();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     public void closeSocket() {
-//        try {
-//            socket.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         connectThread.cancel();
     }
 
