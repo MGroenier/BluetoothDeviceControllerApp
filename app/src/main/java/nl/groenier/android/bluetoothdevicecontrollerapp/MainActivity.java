@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
-import nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity.bluetooth.BluetoothHandler;
+import nl.groenier.android.bluetoothdevicecontrollerapp.bluetooth.BluetoothHandler;
 import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
 import nl.groenier.android.bluetoothdevicecontrollerapp.model.DeviceType;
 

@@ -1,27 +1,29 @@
 package nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity;
 
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.UUID;
-
+import nl.groenier.android.bluetoothdevicecontrollerapp.DeviceAdapter;
 import nl.groenier.android.bluetoothdevicecontrollerapp.DeviceSettingsActivity;
+import nl.groenier.android.bluetoothdevicecontrollerapp.MainActivity;
 import nl.groenier.android.bluetoothdevicecontrollerapp.R;
 import nl.groenier.android.bluetoothdevicecontrollerapp.SQLite.DataSource;
-import nl.groenier.android.bluetoothdevicecontrollerapp.controlActivity.bluetooth.BluetoothHandler;
+import nl.groenier.android.bluetoothdevicecontrollerapp.bluetooth.BluetoothHandler;
 import nl.groenier.android.bluetoothdevicecontrollerapp.model.Device;
+import nl.groenier.android.bluetoothdevicecontrollerapp.model.DeviceType;
 
 /**
  * Created by Martijn on 09/10/2016.
@@ -108,6 +110,9 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
             }
         });
 
+        IntentFilter filterDeviceFound = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        registerReceiver(mReceiverDeviceDisconnected, filterDeviceFound);
+
     }
 
     @Override
@@ -115,5 +120,18 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
         super.onPause();
         mBluetoothHandler.closeSocket();
     }
+
+    // Create a BroadcastReceiver for ACTION_ACL_DISCONNECTED
+    private final BroadcastReceiver mReceiverDeviceDisconnected = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            // When device disconnects
+            if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                // Get the BluetoothDevice object from the Intent
+                mBluetoothHandler.closeSocket();
+                finish();
+            }
+        }
+    };
 
 }
