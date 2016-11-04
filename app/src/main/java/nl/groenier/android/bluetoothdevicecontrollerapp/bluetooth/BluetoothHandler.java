@@ -6,6 +6,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import static nl.groenier.android.bluetoothdevicecontrollerapp.MainActivity.REQU
 
 public class BluetoothHandler {
 
+    private static final String TAG = "BluetoothHandler";
     private ConnectThread connectThread;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothDevice connectedBluetoothDevice;
@@ -111,6 +114,7 @@ public class BluetoothHandler {
                 mmSocket.connect();
             } catch (IOException connectException) {
                 // Unable to connect; close the socket and get out
+                Snackbar.make(view,"Failed to connect!", Snackbar.LENGTH_SHORT).show();
                 try {
                     mmSocket.close();
                 } catch (IOException closeException) { }
@@ -120,8 +124,11 @@ public class BluetoothHandler {
             try {
             outputStream = mmSocket.getOutputStream();
             } catch (IOException e) {
+                Snackbar.make(view,"Failed to connect!", Snackbar.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
+
+            Snackbar.make(view,"Connected Successfully!", Snackbar.LENGTH_SHORT).show();
 
             // Do work to manage the connection (in a separate thread)
             //manageConnectedSocket(mmSocket);

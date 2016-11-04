@@ -118,6 +118,7 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+//        unregisterReceiver(mReceiverDeviceDisconnected);
         mBluetoothHandler.closeSocket();
     }
 
