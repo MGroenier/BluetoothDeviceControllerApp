@@ -22,6 +22,14 @@
         android:textColor="#999"
         android:text="Available devices:"/>
 
+    <ImageButton
+        android:id="@+id/image_button_about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_info_outline_white_24dp"
+        android:background="@android:color/transparent"
+        android:layout_alignParentRight="true"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_devices"
         android:layout_width="match_parent"

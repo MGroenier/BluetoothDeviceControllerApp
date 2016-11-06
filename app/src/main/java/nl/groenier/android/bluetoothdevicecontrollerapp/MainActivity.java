@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_ENABLE_BT = 0001;
 
     private ImageButton ImageButtonDiscoverDevices;
+    private ImageButton ImageButtonAbout;
     private ImageView scanPulseShape;
     private Animation scanPulseAnimation;
 
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ImageButtonDiscoverDevices = (ImageButton) findViewById(R.id.button_discover_devices);
+        ImageButtonAbout = (ImageButton) findViewById(R.id.image_button_about);
         scanPulseShape = (ImageView) findViewById(R.id.image_view_scan_shape);
         scanPulseAnimation = AnimationUtils.loadAnimation(this, R.anim.scan);
 
@@ -86,6 +88,14 @@ public class MainActivity extends AppCompatActivity {
                 deviceRecyclerView.setAdapter(deviceAdapter);
                 mBluetoothHandler.bluetoothSetup();
                 bluetoothDiscoverDevices();
+            }
+        });
+
+        ImageButtonAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentStartAboutActivity = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(intentStartAboutActivity);
             }
         });
 

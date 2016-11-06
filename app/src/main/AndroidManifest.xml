@@ -39,6 +39,8 @@
         <activity android:name="nl.groenier.android.bluetoothdevicecontrollerapp.DeviceRegisterActivity" />
         <activity android:name="nl.groenier.android.bluetoothdevicecontrollerapp.DeviceSettingsActivity" />
 
+        <activity android:name="nl.groenier.android.bluetoothdevicecontrollerapp.AboutActivity" />
+
     </application>
 
 </manifest>
