@@ -134,7 +134,7 @@ public class BluetoothHandler {
             //manageConnectedSocket(mmSocket);
         }
 
-        /** Will cancel an in-progress connection, and close the socket */
+        //Will try to close the socket
         public void cancel() {
             try {
                 mmSocket.close();

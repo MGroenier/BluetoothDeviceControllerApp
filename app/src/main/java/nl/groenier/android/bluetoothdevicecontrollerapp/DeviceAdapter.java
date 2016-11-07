@@ -24,6 +24,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
 
     final Context context;
     private final List<Device> deviceArrayList;
+//    private List<Device> deviceArrayList;
 
     public DeviceAdapter(List<Device> list, Context context) {
         deviceArrayList = list;
@@ -44,18 +45,20 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
         return deviceArrayList.get(position).getId();
     }
 
-    public void updateList(List<Device> newlist) {
-        // Set new updated list
-        deviceArrayList.clear();
-        deviceArrayList.addAll(newlist);
-    }
+//    public void updateList(List<Device> newlist) {
+//        // Set new updated list
+//        deviceArrayList.clear();
+//        deviceArrayList.addAll(newlist);
+//    }
 
+    //ViewHolder contains one item of the list
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.devices_list_item_cardview, parent, false);
         return new ViewHolder(itemView);
     }
 
+    //fill in the fields of the item
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //Populate the row
@@ -83,6 +86,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
             Device selectedDevice = getItem(getAdapterPosition());
             String deviceType = selectedDevice.getDeviceType().getName();
 
+            //Check whether deviceType is known, if yes then go to the correct Control Activity
             if(!deviceType.equals("Unknown")) {
                 Intent intentStartDeviceControl;
                 switch (deviceType) {
@@ -100,7 +104,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
                 intentStartDeviceControl.putExtra("connectedBluetoothDevice", selectedDevice.getBluetoothDevice());
                 context.startActivity(intentStartDeviceControl);
 
-            } else {
+            } else { // if not, then go to the device registration Activity
                 Log.d("fatal", "else: " + deviceType);
                 Intent intentStartDeviceRegister = new Intent(context, DeviceRegisterActivity.class);
                 intentStartDeviceRegister.putExtra("selectedDeviceMac", selectedDevice.getBluetoothDevice().getAddress());

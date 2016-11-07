@@ -55,16 +55,22 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Used to obtain and edit data from database
         datasource = new DataSource(this);
+
+        //Handles as much of the bluetooth related actions as possible
         mBluetoothHandler = new BluetoothHandler(this);
 
+        //If not present in database, populate it
         if(datasource.getDeviceType("Unknown") == null) {
             populateDatabase();
         }
 
+        //Get references to the different components of the layout
         ImageButtonDiscoverDevices = (ImageButton) findViewById(R.id.button_discover_devices);
         ImageButtonAbout = (ImageButton) findViewById(R.id.image_button_about);
         scanPulseShape = (ImageView) findViewById(R.id.image_view_scan_shape);
+
         scanPulseAnimation = AnimationUtils.loadAnimation(this, R.anim.scan);
 
         listOfDevices = new ArrayList<Device>();
@@ -84,8 +90,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 listOfDevices.clear();
-                deviceAdapter = new DeviceAdapter(listOfDevices, MainActivity.this);
-                deviceRecyclerView.setAdapter(deviceAdapter);
+                deviceAdapter.notifyDataSetChanged();
+//                deviceAdapter = new DeviceAdapter(listOfDevices, MainActivity.this);
+//                deviceRecyclerView.setAdapter(deviceAdapter);
                 mBluetoothHandler.bluetoothSetup();
                 bluetoothDiscoverDevices();
             }
@@ -106,8 +113,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         listOfDevices.clear();
-        deviceAdapter = new DeviceAdapter(listOfDevices, MainActivity.this);
-        deviceRecyclerView.setAdapter(deviceAdapter);
+        deviceAdapter.notifyDataSetChanged();
+//        deviceAdapter = new DeviceAdapter(listOfDevices, MainActivity.this);
+//        deviceRecyclerView.setAdapter(deviceAdapter);
 
         mBluetoothHandler.bluetoothSetup();
         bluetoothDiscoverDevices();
@@ -136,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Below all code related to the discovery and building of the recycler view.
 
+    //Start discovery and register the BroadcastReceivers
     public void bluetoothDiscoverDevices() {
         if (mBluetoothHandler.getBluetoothAdapter() != null) {
             mBluetoothHandler.startBluetoothDiscovery();
@@ -185,27 +194,29 @@ public class MainActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                Parcelable[] uuidExtra = intent.getParcelableArrayExtra(BluetoothDevice.EXTRA_UUID);
-                if(uuidExtra == null) {
-                    Log.d("uuid", "uuidExtra is null");
-                } else {
-                    Log.d("uuid", "uuidExtra is not null");
-                }
+//                Parcelable[] uuidExtra = intent.getParcelableArrayExtra(BluetoothDevice.EXTRA_UUID);
+//                if(uuidExtra == null) {
+//                    Log.d("uuid", "uuidExtra is null");
+//                } else {
+//                    Log.d("uuid", "uuidExtra is not null");
+//                }
 
                 Device deviceRetrievedFromDatabase = datasource.getDevice(device.getAddress());
                 DeviceType deviceType;
 
                 // If not null, then the device is present in the database
                 if(deviceRetrievedFromDatabase != null) {
-                    deviceType = deviceRetrievedFromDatabase.getDeviceType();
-                    listOfDevices.add(new Device(deviceRetrievedFromDatabase.getId(), deviceRetrievedFromDatabase.getDisplayName(), deviceType, device.getAddress(), device));
+//                    deviceType = deviceRetrievedFromDatabase.getDeviceType();
+                    listOfDevices.add(new Device(deviceRetrievedFromDatabase.getId(), deviceRetrievedFromDatabase.getDisplayName(), deviceRetrievedFromDatabase.getDeviceType(), device.getAddress(), device));
                 } else {
                     deviceType = datasource.getDeviceType("Unknown");
                     listOfDevices.add(new Device(device.getName(), deviceType, device));
                 }
 
-                deviceAdapter = new DeviceAdapter(listOfDevices, MainActivity.this);
-                deviceRecyclerView.setAdapter(deviceAdapter);
+//                deviceAdapter = new DeviceAdapter(listOfDevices, MainActivity.this);
+//                deviceRecyclerView.setAdapter(deviceAdapter);
+                deviceAdapter.notifyDataSetChanged();
+
             }
         }
     };

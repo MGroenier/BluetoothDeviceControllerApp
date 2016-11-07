@@ -110,15 +110,15 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
             }
         });
 
-        IntentFilter filterDeviceFound = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-        registerReceiver(mReceiverDeviceDisconnected, filterDeviceFound);
+        IntentFilter filterDeviceDisconnected = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        registerReceiver(mReceiverDeviceDisconnected, filterDeviceDisconnected);
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        unregisterReceiver(mReceiverDeviceDisconnected);
+        unregisterReceiver(mReceiverDeviceDisconnected);
         mBluetoothHandler.closeSocket();
     }
 
@@ -128,7 +128,6 @@ public class DeviceControlWallplugActivity extends AppCompatActivity {
             String action = intent.getAction();
             // When device disconnects
             if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                // Get the BluetoothDevice object from the Intent
                 mBluetoothHandler.closeSocket();
                 finish();
             }

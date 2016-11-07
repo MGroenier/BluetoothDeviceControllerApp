@@ -70,19 +70,4 @@ public class DeviceRegisterActivity extends AppCompatActivity {
 
     }
 
-    private int getIconResource(String selectedDeviceType) {
-        int iconResource = 0;
-
-        switch (selectedDeviceType) {
-            case "rotating light":
-                iconResource = R.drawable.siren_icon_white;
-                break;
-            case "wallplug":
-                iconResource = R.drawable.wallplug_white;
-                break;
-        }
-
-        return iconResource;
-    }
-
 }
